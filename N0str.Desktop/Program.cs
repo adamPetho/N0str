@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using N0str.Views;
 using System;
 
 namespace N0str

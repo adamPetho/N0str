@@ -1,4 +1,4 @@
 <Solution>
   <Project Path="N0str.Desktop/N0str.Desktop.csproj" />
-  <Project Path="N0str.Lib/N0str.Lib.csproj" Id="51f7e111-0f3a-4243-b3d7-684e816887f0" />
+  <Project Path="N0str.Lib/N0str.csproj" Id="51f7e111-0f3a-4243-b3d7-684e816887f0" />
 </Solution>

@@ -21,4 +21,8 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.6" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.6" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\N0str.Lib\N0str.csproj" />
+  </ItemGroup>
 </Project>
