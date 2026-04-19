@@ -4,6 +4,7 @@ using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using N0str.Services;
+using N0str.Services.Tor;
 using N0str.ViewModels;
 
 namespace N0str.Views
@@ -25,6 +26,9 @@ namespace N0str.Views
 
             // Creates a ServiceProvider containing services from the provided IServiceCollection
             var services = collection.BuildServiceProvider();
+
+            var torService = services.GetRequiredService<ITorService>();
+            _ = torService.InitializeAsync();
 
             var vm = services.GetRequiredService<MainViewModel>();
 
