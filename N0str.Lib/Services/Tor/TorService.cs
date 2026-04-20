@@ -8,7 +8,9 @@ namespace N0str.Services.Tor
     {
         private TorProcessManager? _torProcessManager;
         private OnionHttpClientFactory? _httpFactory;
-        private TorSettings? _torSettings;
+        public TorSettings? _torSettings;
+
+        public TorSettings? TorSettings => _torSettings;
 
         public async Task InitializeAsync(CancellationToken ct = default)
         {
@@ -44,7 +46,5 @@ namespace N0str.Services.Tor
         {
             return _httpFactory!.CreateClient(name);
         }
-
-        public TorSettings? GetTorSettings() => _torSettings;
     }
 }
