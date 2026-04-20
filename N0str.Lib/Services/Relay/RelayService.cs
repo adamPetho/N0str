@@ -19,6 +19,9 @@ namespace N0str.Services.Relay
         private readonly ITorService _torService;
         private INostrClient NostrClient {  get; set; }
 
+        public List<string> SubscriptionIDs { get; } = [];
+        private Dictionary<string, NostrEvent> ReceivedEvents { get; } = new();
+
         public RelayService(ITorService torService)
         {
             _torService = torService;
@@ -32,6 +35,21 @@ namespace N0str.Services.Relay
             await nostrClient.ConnectAndWaitUntilConnected(ct);
 
             NostrClient = nostrClient;
+            NostrClient.EventsReceived += OnNostrEventsReceived;
+        }
+
+        private void OnNostrEventsReceived(object? sender, (string subscriptionId, NostrEvent[] events) e)
+        {
+            if (SubscriptionIDs.Contains(e.subscriptionId))
+            {
+                foreach (NostrEvent nostrEvent in e.events)
+                {
+                    if (ReceivedEvents.TryAdd(nostrEvent.Id, nostrEvent))
+                    {
+                        // Handle received event, probably fire new event for N0strClient
+                    }
+                }
+            }
         }
 
         public async Task SendAsync(NostrEvent nostrEvent, CancellationToken ct = default)
@@ -39,13 +57,13 @@ namespace N0str.Services.Relay
             await NostrClient.SendEventsAndWaitUntilReceived([nostrEvent], ct);
         }
 
-        public async Task<string> CreateSubscriptionAsync(string pubkey, CancellationToken ct = default)
+        public async Task CreateSubscriptionAsync(string pubkey, CancellationToken ct = default)
         {
             string pubKeyHex = NIP19.FromNIP19Npub(pubkey).ToHex();
             string subscriptionID = Guid.NewGuid().ToString();
             await NostrClient.CreateSubscription(subscriptionID, [new() { Kinds = [1], Authors = [pubKeyHex] }], ct).ConfigureAwait(false);
 
-            return subscriptionID;
+            SubscriptionIDs.Add(subscriptionID);
         }
     }
 }
