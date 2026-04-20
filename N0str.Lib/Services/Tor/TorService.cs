@@ -44,5 +44,7 @@ namespace N0str.Services.Tor
         {
             return _httpFactory!.CreateClient(name);
         }
+
+        public TorSettings? GetTorSettings() => _torSettings;
     }
 }

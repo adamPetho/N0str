@@ -28,6 +28,8 @@ namespace N0str.Views
             var services = collection.BuildServiceProvider();
 
             var torService = services.GetRequiredService<ITorService>();
+
+            // TODO: Fix fire and forget
             _ = torService.InitializeAsync();
 
             var vm = services.GetRequiredService<MainViewModel>();
