@@ -3,7 +3,9 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
+using N0str.Nostr;
 using N0str.Services;
+using N0str.Services.Relay;
 using N0str.Services.Tor;
 using N0str.ViewModels;
 
@@ -31,6 +33,10 @@ namespace N0str.Views
 
             // TODO: Fix fire and forget
             _ = torService.InitializeAsync();
+
+            var relayService = services.GetRequiredService<IRelayService>();
+
+            relayService.ConnectAsync(DefaultRelayURLs.URLs);
 
             var vm = services.GetRequiredService<MainViewModel>();
 
