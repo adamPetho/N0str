@@ -1,39 +1,28 @@
 ﻿using OnionSharp.Microservices;
 using OnionSharp.Tor;
 using OnionSharp.Tor.Models;
+using System.Net;
 
 namespace N0str.Services.Tor
 {
     public class TorService : ITorService
     {
         private TorProcessManager? _torProcessManager;
-        private OnionHttpClientFactory? _httpFactory;
-        public TorSettings? _torSettings;
 
-        public TorSettings? TorSettings => _torSettings;
+        public TorSettings _torSettings = new(
+            EnvironmentHelpers.GetDataDir("N0str"),
+            EnvironmentHelpers.GetFullBaseDirectory(),
+            terminateOnExit: true,
+            socksPort: 37155,
+            controlPort: 37156);
 
         public async Task InitializeAsync(CancellationToken ct = default)
         {
             try
             {
-                var dataDir = EnvironmentHelpers.GetDataDir("N0str");
-
-                _torSettings = new TorSettings(
-                    dataDir,
-                    distributionFolderPath: EnvironmentHelpers.GetFullBaseDirectory(),
-                    terminateOnExit: true,
-                    TorMode.Enabled,
-                    socksPort: 37155,
-                    controlPort: 37156
-                );
-
                 _torProcessManager = new TorProcessManager(_torSettings);
 
                 await _torProcessManager.StartAsync(attempts: 3, ct);
-
-                _httpFactory = new OnionHttpClientFactory(
-                    _torSettings.SocksEndpoint.ToUri("socks5")
-                );
             }
             catch (Exception ex) 
             {
@@ -42,9 +31,6 @@ namespace N0str.Services.Tor
             }
         }
 
-        public HttpClient CreateHttpClient(string name = "default")
-        {
-            return _httpFactory!.CreateClient(name);
-        }
+        public EndPoint GetSocksEndpoint() => _torSettings.SocksEndpoint;
     }
 }
