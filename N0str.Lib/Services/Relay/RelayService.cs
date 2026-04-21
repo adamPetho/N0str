@@ -5,6 +5,7 @@ using N0str.Views;
 using NNostr.Client;
 using NNostr.Client.Protocols;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -14,13 +15,16 @@ using System.Threading.Tasks;
 
 namespace N0str.Services.Relay
 {
-    public class RelayService : IRelayService
+    public class RelayService : IRelayService, IDisposable
     {
         private readonly ITorService _torService;
-        private INostrClient NostrClient {  get; set; }
+        private INostrClient? _nostrClient;
+        private INostrClient NostrClient => _nostrClient ?? throw new InvalidOperationException("NostrClient is null. Not connected to relays.");
 
-        public List<string> SubscriptionIDs { get; } = [];
-        private Dictionary<string, NostrEvent> ReceivedEvents { get; } = new();
+        public event Action<NostrEvent>? EventReceived;
+
+        public HashSet<string> SubscriptionIDs { get; } = [];
+        private ConcurrentDictionary<string, NostrEvent> ReceivedEvents { get; } = new();
 
         public RelayService(ITorService torService)
         {
@@ -30,11 +34,11 @@ namespace N0str.Services.Relay
         public async Task ConnectAsync(IEnumerable<string> relayUrls, CancellationToken ct = default)
         {
             var relayUris = relayUrls.Select(x => new Uri(x));
-            INostrClient nostrClient = NostrClientFactory.Create([.. relayUris], _torService.TorSettings.SocksEndpoint);
+            INostrClient nostrClient = NostrClientFactory.Create([.. relayUris], _torService.GetSocksEndpoint());
 
             await nostrClient.ConnectAndWaitUntilConnected(ct);
 
-            NostrClient = nostrClient;
+            _nostrClient = nostrClient;
             NostrClient.EventsReceived += OnNostrEventsReceived;
         }
 
@@ -46,7 +50,7 @@ namespace N0str.Services.Relay
                 {
                     if (ReceivedEvents.TryAdd(nostrEvent.Id, nostrEvent))
                     {
-                        // Handle received event, probably fire new event for N0strClient
+                        EventReceived?.Invoke(nostrEvent);
                     }
                 }
             }
@@ -64,6 +68,12 @@ namespace N0str.Services.Relay
             await NostrClient.CreateSubscription(subscriptionID, [new() { Kinds = [1], Authors = [pubKeyHex] }], ct).ConfigureAwait(false);
 
             SubscriptionIDs.Add(subscriptionID);
+        }
+
+        public void Dispose()
+        {
+            NostrClient.EventsReceived -= OnNostrEventsReceived;
+            NostrClient.Dispose();
         }
     }
 }
