@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NNostr.Client;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,8 @@ namespace N0str.Services.Relay
     public interface IRelayService
     {
         Task ConnectAsync(IEnumerable<string> relayUrls, CancellationToken ct = default);
+
+        event Action<(string, NostrEvent)>? EventReceived;
+        event Action<string>? SuccessfulSubscription;
     }
 }

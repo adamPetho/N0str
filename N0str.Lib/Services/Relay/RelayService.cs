@@ -21,10 +21,8 @@ namespace N0str.Services.Relay
         private INostrClient? _nostrClient;
         private INostrClient NostrClient => _nostrClient ?? throw new InvalidOperationException("NostrClient is null. Not connected to relays.");
 
-        public event Action<NostrEvent>? EventReceived;
-
-        public HashSet<string> SubscriptionIDs { get; } = [];
-        private ConcurrentDictionary<string, NostrEvent> ReceivedEvents { get; } = new();
+        public event Action<(string, NostrEvent)>? EventReceived;
+        public event Action<string>? SuccessfulSubscription;
 
         public RelayService(ITorService torService)
         {
@@ -44,15 +42,9 @@ namespace N0str.Services.Relay
 
         private void OnNostrEventsReceived(object? sender, (string subscriptionId, NostrEvent[] events) e)
         {
-            if (SubscriptionIDs.Contains(e.subscriptionId))
+            foreach (NostrEvent ev in e.events)
             {
-                foreach (NostrEvent nostrEvent in e.events)
-                {
-                    if (ReceivedEvents.TryAdd(nostrEvent.Id, nostrEvent))
-                    {
-                        EventReceived?.Invoke(nostrEvent);
-                    }
-                }
+                EventReceived?.Invoke((e.subscriptionId, ev));
             }
         }
 
@@ -67,7 +59,7 @@ namespace N0str.Services.Relay
             string subscriptionID = Guid.NewGuid().ToString();
             await NostrClient.CreateSubscription(subscriptionID, [new() { Kinds = [1], Authors = [pubKeyHex] }], ct).ConfigureAwait(false);
 
-            SubscriptionIDs.Add(subscriptionID);
+            SuccessfulSubscription?.Invoke(subscriptionID);
         }
 
         public void Dispose()
