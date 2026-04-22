@@ -48,7 +48,7 @@ namespace N0str.Services.Relay
             }
         }
 
-        public async Task SendAsync(NostrEvent nostrEvent, CancellationToken ct = default)
+        public async Task PublishEventAsync(NostrEvent nostrEvent, CancellationToken ct = default)
         {
             await NostrClient.SendEventsAndWaitUntilReceived([nostrEvent], ct);
         }

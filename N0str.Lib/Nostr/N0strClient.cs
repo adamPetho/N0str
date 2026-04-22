@@ -1,31 +1,65 @@
-﻿using NNostr.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using N0str.Services.Events;
+using N0str.Services.Relay;
+using NBitcoin.Secp256k1;
+using NNostr.Client;
+using NNostr.Client.Protocols;
 
 namespace N0str.Nostr
 {
-    public class N0strClient
+    public class N0strClient : IN0strClient
     {
-        public INostrClient NostrClient { get; }
+        private readonly IRelayService _relayService;
+        private readonly IEventService _eventService;
 
-        public N0strClient(INostrClient nostrClient)
+        public N0strClient(IRelayService relayService, IEventService eventService)
         {
-            NostrClient = nostrClient;
+            _relayService = relayService;
+            _eventService = eventService;
         }
 
-        public async Task InitializeAsync(CancellationToken ct)
+        public async Task<NostrEvent> CreateNostrEvent(string content, List<(string TagIdentifier, string[] Data)> tags)
         {
-            NostrClient.EventsReceived += OnNostrEventsReceived;
+            NostrEvent unsignedEvent = new NostrEvent
+            {
+                Kind = 1,
+                Content = content,
+                Tags = CreateTags(tags),
+                CreatedAt = DateTime.UtcNow,
+            };
 
-            await NostrClient.ConnectAndWaitUntilConnected(ct).ConfigureAwait(false);
+            return unsignedEvent;
         }
 
-        private void OnNostrEventsReceived(object? sender, (string subscriptionId, NostrEvent[] events) e)
+        public async Task<NostrEvent> SignEvent(string key, NostrEvent nostrEvent)
         {
-            throw new NotImplementedException();
+            using ECPrivKey signingKey = key.FromNIP19Nsec();
+            return await nostrEvent.ComputeIdAndSignAsync(signingKey);
+        }
+
+        private List<NostrEventTag> CreateTags(List<(string TagIdentifier, string[] Data)> tags)
+        {
+            List<NostrEventTag> nostrEventTags = new List<NostrEventTag>();
+
+            foreach (var tag in tags) 
+            {
+                nostrEventTags.Add(new NostrEventTag()
+                {
+                    TagIdentifier = tag.TagIdentifier,
+                    Data = tag.Data.ToList()
+                });
+            }
+
+            return nostrEventTags;
+        }
+
+        public async Task PublishAsync(NostrEvent ev, CancellationToken ct = default)
+        {
+            await _relayService.PublishEventAsync(ev, ct);
+        }
+
+        public IEnumerable<NostrEvent> FetchAllByAuthor(string pubkey)
+        {
+            return _eventService.GetEventsByAuthor(pubkey);
         }
     }
 }

@@ -1,11 +1,6 @@
 ﻿using N0str.Services.Relay;
 using NNostr.Client;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace N0str.Services.Events
 {
@@ -22,6 +17,7 @@ namespace N0str.Services.Events
         }
         public ConcurrentDictionary<string, byte> SubscriptionIDs { get; } = new();
         private ConcurrentDictionary<string, NostrEvent> ReceivedEvents { get; } = new();
+        private ConcurrentDictionary<string, ConcurrentBag<string>> EventsByAuthor { get;  } = new();
 
         public event Action<NostrEvent>? RelevantEventReceived;
 
@@ -31,6 +27,7 @@ namespace N0str.Services.Events
             {
                 return;
             }
+
             ProcessRelevantEvent(e.nostrEvent);
         }
 
@@ -38,10 +35,22 @@ namespace N0str.Services.Events
         {
             SubscriptionIDs.TryAdd(subscriptionID, 0);
         }
+
+        public IEnumerable<NostrEvent> GetEventsByAuthor(string pubkey)
+        {
+            if (EventsByAuthor.TryGetValue(pubkey, out var ids))
+                return [.. ids.Select(id => ReceivedEvents[id])];
+
+            return [];
+        }
         private void ProcessRelevantEvent(NostrEvent nostrEvent)
         {
             if (ReceivedEvents.TryAdd(nostrEvent.Id, nostrEvent))
             {
+                EventsByAuthor
+                    .GetOrAdd(nostrEvent.PublicKey, _ => [])
+                    .Add(nostrEvent.Id);
+
                 RelevantEventReceived?.Invoke(nostrEvent);
             }
         }
