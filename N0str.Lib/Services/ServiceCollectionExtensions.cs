@@ -15,6 +15,7 @@ namespace N0str.Services
             collection.AddSingleton<IRelayService, RelayService>();
             collection.AddSingleton<IEventService, EventService>();
             collection.AddSingleton<IN0strClient, N0strClient>();
+            collection.AddSingleton<INavigation, NavigationService>();
             collection.AddTransient<MainViewModel>();
         }
     }

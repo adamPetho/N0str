@@ -2,7 +2,7 @@
 
 namespace N0str.Services
 {
-    public class NavigationService
+    public class NavigationService : INavigation
     {
         private readonly Stack<ViewModelBase> _navigationStack = new();
         public event Action<ViewModelBase>? CurrentViewModelChanged;
@@ -23,6 +23,9 @@ namespace N0str.Services
             }
         }
 
-        public bool CanNavigateBack => _navigationStack.Count > 1;
+        public bool CanNavigateBack()
+        {
+            return _navigationStack.Count > 1;
+        }
     }
 }
