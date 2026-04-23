@@ -19,7 +19,7 @@ namespace N0str.ViewModels
             _navigationService = new NavigationService();
             _navigationService.CurrentViewModelChanged += OnCurrentViewModelChanged;
             
-            _navigationService.NavigateTo(new MenuViewModel());
+            _navigationService.NavigateTo(new MenuViewModel(_navigationService));
         }
 
         private void OnCurrentViewModelChanged(ViewModelBase viewModel)

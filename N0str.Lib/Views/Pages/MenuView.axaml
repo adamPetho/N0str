@@ -6,5 +6,61 @@
              x:DataType="vm:MenuViewModel"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="N0str.Views.Pages.MenuView">
-  Welcome to MenuView!
+  <Grid ColumnDefinitions="*,*">
+
+    <!-- LEFT: Publish -->
+    <Border Grid.Column="0"
+            Background="#2B2B2B"
+            Padding="20">
+      <Button Command="{Binding GoToPublishCommand}"
+              Background="Transparent"
+              BorderThickness="0"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              HorizontalContentAlignment="Center"
+              VerticalContentAlignment="Center">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="12">
+          <TextBlock Text="✍"
+                     FontSize="48"
+                     HorizontalAlignment="Center"/>
+          <TextBlock Text="Publish a Post"
+                     FontSize="20"
+                     FontWeight="SemiBold"
+                     HorizontalAlignment="Center"/>
+          <TextBlock Text="Write and broadcast a new note"
+                     FontSize="12"
+                     Foreground="#AAAAAA"
+                     HorizontalAlignment="Center"/>
+        </StackPanel>
+      </Button>
+    </Border>
+
+    <!-- RIGHT: Fetch -->
+    <Border Grid.Column="1"
+            Background="#1F1F1F"
+            Padding="20">
+      <Button Command="{Binding GoToFeedCommand}"
+              Background="Transparent"
+              BorderThickness="0"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              HorizontalContentAlignment="Center"
+              VerticalContentAlignment="Center">
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="12">
+          <TextBlock Text="📡"
+                     FontSize="48"
+                     HorizontalAlignment="Center"/>
+          <TextBlock Text="Fetch Events"
+                     FontSize="20"
+                     FontWeight="SemiBold"
+                     HorizontalAlignment="Center"/>
+          <TextBlock Text="Browse notes from the network"
+                     FontSize="12"
+                     Foreground="#AAAAAA"
+                     HorizontalAlignment="Center"/>
+        </StackPanel>
+      </Button>
+    </Border>
+
+  </Grid>
 </UserControl>
