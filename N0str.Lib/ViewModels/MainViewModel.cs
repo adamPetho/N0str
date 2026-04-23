@@ -1,4 +1,5 @@
 ﻿using N0str.Services;
+using N0str.ViewModels.Pages;
 
 namespace N0str.ViewModels
 {
@@ -18,8 +19,7 @@ namespace N0str.ViewModels
             _navigationService = new NavigationService();
             _navigationService.CurrentViewModelChanged += OnCurrentViewModelChanged;
             
-            // TODO: Start with MainMenu
-            // _navigationService.NavigateTo();
+            _navigationService.NavigateTo(new MenuViewModel());
         }
 
         private void OnCurrentViewModelChanged(ViewModelBase viewModel)
