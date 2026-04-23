@@ -11,6 +11,6 @@ namespace N0str.Nostr
     {
         Task<NostrEvent> SignEvent(string key, NostrEvent nostrEvent);
         Task<NostrEvent> CreateNostrEvent(string content, List<(string TagIdentifier, string[] Data)> tags);
-        Task PublishAsync(NostrEvent ev, CancellationToken ct = default);
+        Task PublishEventAsync(NostrEvent ev, CancellationToken ct = default);
     }
 }

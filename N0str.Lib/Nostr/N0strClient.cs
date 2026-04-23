@@ -52,7 +52,7 @@ namespace N0str.Nostr
             return nostrEventTags;
         }
 
-        public async Task PublishAsync(NostrEvent ev, CancellationToken ct = default)
+        public async Task PublishEventAsync(NostrEvent ev, CancellationToken ct = default)
         {
             await _relayService.PublishEventAsync(ev, ct);
         }

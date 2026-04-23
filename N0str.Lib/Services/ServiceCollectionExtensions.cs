@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using N0str.Nostr;
 using N0str.Services.Events;
 using N0str.Services.Relay;
 using N0str.Services.Tor;
@@ -13,6 +14,7 @@ namespace N0str.Services
             collection.AddSingleton<ITorService, TorService>();
             collection.AddSingleton<IRelayService, RelayService>();
             collection.AddSingleton<IEventService, EventService>();
+            collection.AddSingleton<IN0strClient, N0strClient>();
             collection.AddTransient<MainViewModel>();
         }
     }
