@@ -21,8 +21,6 @@ namespace N0str.Views
 
         public override void OnFrameworkInitializationCompleted()
         {
-            BindingPlugins.DataValidators.RemoveAt(0);
-
             // Register all the services needed for the application to run
             var collection = new ServiceCollection();
             collection.AddCommonServices();

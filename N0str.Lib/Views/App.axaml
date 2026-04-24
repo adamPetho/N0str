@@ -14,6 +14,12 @@
         <DataTemplate DataType="vm:MenuViewModel">
             <views:MenuView/>
         </DataTemplate>
+        <DataTemplate DataType="vm:CreateEventViewModel">
+			<views:CreateEvent/>
+        </DataTemplate>
+        <DataTemplate DataType="vm:FetchPostsViewModel">
+			<views:FetchPostsView/>
+        </DataTemplate>
     </Application.DataTemplates>
 
 </Application>
