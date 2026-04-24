@@ -1,8 +1,9 @@
 ﻿using Avalonia;
+using Avalonia.ReactiveUI;
 using N0str.Views;
 using System;
 
-namespace N0str
+namespace N0str.Desktop
 {
     internal class Program
     {
@@ -18,6 +19,7 @@ namespace N0str
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
                 .WithInterFont()
-                .LogToTrace();
+                .LogToTrace()
+                .UseReactiveUI();
     }
 }
