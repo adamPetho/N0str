@@ -93,7 +93,7 @@
                 </Border>
               </StackPanel>
               <TextBlock Grid.Column="1"
-                         Text="{Binding TagsExpanded}"
+                         Text="{Binding TagsExpanded, Converter={StaticResource BoolToChevronConverter}}"
                          FontSize="16"
                          Foreground="#666666"
                          VerticalAlignment="Center"/>
