@@ -123,7 +123,7 @@
                              Padding="10,8"
                              FontSize="13"/>
                     <TextBlock Grid.Column="1"
-                               Text="→"
+                               Text=" : "
                                Foreground="#555555"
                                VerticalAlignment="Center"
                                HorizontalAlignment="Center"
@@ -177,18 +177,33 @@
         </StackPanel>
       </Border>
 
-      <!-- Submit -->
-      <Button Command="{Binding PublishCommand}"
+      <!-- Submit & Back -->
+      <Grid ColumnDefinitions="*, *">
+			  <Button Command="{Binding NavigateBack}"
+              Grid.Column="0"
               HorizontalAlignment="Stretch"
               HorizontalContentAlignment="Center"
               Background="#7B68EE"
               Foreground="#FFFFFF"
               BorderThickness="0"
               CornerRadius="8"
-              Padding="0,14"
+              FontSize="15"
+              Margin="0, 0, 4 ,0"
+              FontWeight="SemiBold"
+              Content="Cancel"/>
+
+		  <Button Command="{Binding SignAndPublishCommand}"
+              Grid.Column="1"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Center"
+              Background="#7B68EE"
+              Foreground="#FFFFFF"
+              BorderThickness="0"
+              CornerRadius="8"
               FontSize="15"
               FontWeight="SemiBold"
-              Content="Publish Event"/>
+              Content="Sign &amp; Publish"/>
+      </Grid>
 
     </StackPanel>
   </ScrollViewer>

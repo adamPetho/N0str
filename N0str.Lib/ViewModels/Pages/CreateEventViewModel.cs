@@ -1,4 +1,5 @@
-﻿using N0str.Views;
+﻿using N0str.Services;
+using N0str.Views;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ namespace N0str.ViewModels.Pages
         private string _content = string.Empty;
         private int _kind = 1;
         private bool _tagsExpanded = false;
+
+        private readonly INavigation _navigationService;
 
         public string Content
         {
@@ -36,14 +39,18 @@ namespace N0str.ViewModels.Pages
         }
 
         public ObservableCollection<TagEntryViewModel> Tags { get; } = new();
-
         public ReactiveCommand<Unit, Unit> ToggleTagsCommand { get; }
         public ReactiveCommand<Unit, Unit> AddTagCommand { get; }
         public ReactiveCommand<TagEntryViewModel, Unit> RemoveTagCommand { get; }
-        public ReactiveCommand<Unit, Unit> PublishCommand { get; }
+        public ReactiveCommand<Unit, Unit> SignAndPublishCommand { get; }
+        public ICommand NavigateBack {  get; }
 
-        public CreateEventViewModel()
+        public CreateEventViewModel(INavigation navigationService)
         {
+            _navigationService = navigationService;
+
+            NavigateBack = ReactiveCommand.Create(_navigationService.NavigateBack);
+
             ToggleTagsCommand = ReactiveCommand.Create(() =>
             {
                 TagsExpanded = !TagsExpanded;
@@ -65,7 +72,7 @@ namespace N0str.ViewModels.Pages
                 (content, kind) => !string.IsNullOrWhiteSpace(content) && kind >= 0
             );
 
-            PublishCommand = ReactiveCommand.Create(() =>
+            SignAndPublishCommand = ReactiveCommand.Create(() =>
             {
                 // Snapshot ready — handle publishing from outside or extend here
                 var snapshot = new
@@ -74,7 +81,10 @@ namespace N0str.ViewModels.Pages
                     Kind,
                     Tags = Tags.Select(t => (t.Identifier, t.Data)).ToList()
                 };
+
+                //_navigationService.NavigateTo();
             }, canPublish);
+
         }
     }
 

@@ -25,12 +25,12 @@ namespace N0str.ViewModels.Pages
 
         private void NavigateToPublish()
         {
-            return;
+            _navigationService.NavigateTo(new CreateEventViewModel(_navigationService));
         }
 
         private void NavigateToFeed()
         {
-            return;
+            _navigationService.NavigateTo(new FetchPostsViewModel());
         }
     }
 }
