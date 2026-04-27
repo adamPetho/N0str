@@ -15,7 +15,7 @@ namespace N0str.ViewModels.Pages
     public class CreateEventViewModel : ViewModelBase
     {
         private string _content = string.Empty;
-        private int _kind = 1;
+        private int? _kind = 1;
         private bool _tagsExpanded = false;
 
         private readonly INavigation _navigationService;
@@ -26,10 +26,10 @@ namespace N0str.ViewModels.Pages
             set => SetProperty(ref _content, value);
         }
 
-        public int Kind
+        public int? Kind
         {
             get => _kind;
-            set => SetProperty(ref _kind, value);
+            set => SetProperty(ref _kind, value ?? 1);
         }
 
         public bool TagsExpanded
@@ -69,7 +69,7 @@ namespace N0str.ViewModels.Pages
             var canPublish = this.WhenAnyValue(
                 x => x.Content,
                 x => x.Kind,
-                (content, kind) => !string.IsNullOrWhiteSpace(content) && kind >= 0
+                (content, kind) => !string.IsNullOrWhiteSpace(content) && kind.HasValue && kind >= 0
             );
 
             SignAndPublishCommand = ReactiveCommand.Create(() =>
