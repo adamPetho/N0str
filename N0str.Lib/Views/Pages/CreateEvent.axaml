@@ -6,6 +6,25 @@
              x:DataType="vm:CreateEventViewModel"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="N0str.Views.Pages.CreateEvent">
+
+    <UserControl.Styles>
+      <Style Selector="TextBox">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="CaretBrush" Value="#7B68EE"/>
+      </Style>
+      <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="#525252"/>
+        <Setter Property="BoxShadow" Value="0 0 0 0 Transparent"/>
+      </Style>
+      <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="#525252"/>
+      </Style>
+
+</UserControl.Styles>
+
   <ScrollViewer>
     <StackPanel Margin="40,32" Spacing="12" MaxWidth="580" HorizontalAlignment="Center">
 
@@ -37,18 +56,18 @@
                        Foreground="#555555"
                        LetterSpacing="1.2"/>
           </StackPanel>
-          <TextBox Text="{Binding Content}"
-                   AcceptsReturn="True"
-                   TextWrapping="Wrap"
-                   Height="100"
-                   Watermark="What's on your mind?"
-                   Background="Transparent"
-                   Foreground="#E0E0E0"
-                   BorderThickness="0"
-                   Padding="0"
-                   FontSize="14"
-                   FontWeight="Light"
-                   CaretBrush="#7B68EE"/>
+              <TextBox Text="{Binding Content}"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 Height="100"
+                 Watermark="What's on your mind?"
+                 Background="Transparent"
+                 Foreground="#E0E0E0"
+                 BorderThickness="0"
+                 Padding="0"
+                 FontSize="14"
+                 FontWeight="Light"
+                 CaretBrush="#7B68EE"/>
         </StackPanel>
       </Border>
 
@@ -67,7 +86,7 @@
                        Foreground="#555555"
                        LetterSpacing="1.2"/>
           </StackPanel>
-          <Grid ColumnDefinitions="Auto,*,Auto">
+          <Grid ColumnDefinitions="*, Auto">
             <NumericUpDown Grid.Column="0"
                            Value="{Binding Kind}"
                            Minimum="0"
@@ -81,12 +100,6 @@
                            FontWeight="Medium"
                            Padding="0"
                            Width="100"/>
-            <TextBlock Grid.Column="1"
-                       Text="Event kind (integer)"
-                       FontSize="12"
-                       FontWeight="Light"
-                       Foreground="#444444"
-                       VerticalAlignment="Center"/>
           </Grid>
         </StackPanel>
       </Border>
