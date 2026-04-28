@@ -79,18 +79,13 @@ namespace N0str.ViewModels.Pages
 
             SignAndPublishCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-                // Snapshot ready — handle publishing from outside or extend here
-                var snapshot = new
-                {
-                    Content,
-                    Kind,
-                    Tags = Tags.Select(t => (t.Identifier, t.Data)).ToList()
-                };
 
                 var unsignedNostrEvent = await _n0strClient.CreateNostrEvent(
                     Content,
                     Kind,
                     Tags.Select(t => (TagIdentifier: t.Identifier, Data: new[] { t.Data })).ToList());
+
+                // _navigationService.OpenModal();
 
             }, canPublish);
 
