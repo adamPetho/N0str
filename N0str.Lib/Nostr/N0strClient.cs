@@ -17,11 +17,11 @@ namespace N0str.Nostr
             _eventService = eventService;
         }
 
-        public async Task<NostrEvent> CreateNostrEvent(string content, List<(string TagIdentifier, string[] Data)> tags)
+        public async Task<NostrEvent> CreateNostrEvent(string content, int kind, List<(string TagIdentifier, string[] Data)> tags)
         {
             NostrEvent unsignedEvent = new NostrEvent
             {
-                Kind = 1,
+                Kind = kind,
                 Content = content,
                 Tags = CreateTags(tags),
                 CreatedAt = DateTime.UtcNow,
