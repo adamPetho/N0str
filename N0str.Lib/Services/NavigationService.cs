@@ -6,6 +6,7 @@ namespace N0str.Services
     {
         private readonly Stack<ViewModelBase> _navigationStack = new();
         public event Action<ViewModelBase>? CurrentViewModelChanged;
+        public event Action<ViewModelBase?>? ModalViewModelChanged;
 
         public void NavigateTo(ViewModelBase viewModel)
         {
@@ -26,6 +27,18 @@ namespace N0str.Services
         public bool CanNavigateBack()
         {
             return _navigationStack.Count > 1;
+        }
+
+        public void OpenModal(ViewModelBase viewModel)
+        {
+            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                ModalViewModelChanged?.Invoke(viewModel));
+        }
+
+        public void CloseModal()
+        {
+            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                ModalViewModelChanged?.Invoke(null));
         }
     }
 }

@@ -25,7 +25,7 @@ namespace N0str.ViewModels.Pages
 
         private void NavigateToPublish()
         {
-            _navigationService.NavigateTo(new CreateEventViewModel(_navigationService));
+            _navigationService.OpenModal(new CreateEventViewModel(_navigationService));
         }
 
         private void NavigateToFeed()

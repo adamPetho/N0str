@@ -49,7 +49,7 @@ namespace N0str.ViewModels.Pages
         {
             _navigationService = navigationService;
 
-            NavigateBack = ReactiveCommand.Create(_navigationService.NavigateBack);
+            NavigateBack = ReactiveCommand.Create(_navigationService.CloseModal);
 
             ToggleTagsCommand = ReactiveCommand.Create(() =>
             {

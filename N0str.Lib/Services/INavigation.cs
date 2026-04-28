@@ -10,5 +10,8 @@ namespace N0str.Services
         bool CanNavigateBack();
 
         event Action<ViewModelBase>? CurrentViewModelChanged;
+
+        void OpenModal(ViewModelBase viewModel);
+        void CloseModal();
     }
 }

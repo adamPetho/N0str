@@ -6,5 +6,30 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="N0str.Views.MainWindow"
         Title="N0str">
-    <ContentControl Content="{Binding CurrentViewModel}" />
+    <Grid>
+
+    <!-- Layer 0: Current page -->
+    <ContentControl Content="{Binding CurrentViewModel}"/>
+
+    <!-- Layer 1: Dim overlay -->
+    <Border Background="#99000000"
+            IsVisible="{Binding HasModal}"
+            IsHitTestVisible="{Binding HasModal}"/>
+
+    <!-- Layer 2: Modal card -->
+    <Panel IsVisible="{Binding HasModal}">
+      <Border MaxWidth="580"
+              MaxHeight="700"
+              Background="#141414"
+              BorderBrush="#2A2A2A"
+              BorderThickness="1"
+              CornerRadius="18"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              BoxShadow="0 24 80 0 #CC000000">
+        <ContentControl Content="{Binding ModalViewModel}"/>
+      </Border>
+    </Panel>
+
+  </Grid>
 </Window>
