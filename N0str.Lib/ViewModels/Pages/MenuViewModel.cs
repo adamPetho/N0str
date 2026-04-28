@@ -1,4 +1,5 @@
 ﻿using Metsys.Bson;
+using Microsoft.Extensions.DependencyInjection;
 using N0str.Services;
 using NBitcoin;
 using NBitcoin.RPC;
@@ -11,10 +12,12 @@ namespace N0str.ViewModels.Pages
     public class MenuViewModel : ViewModelBase
     {
         private readonly INavigation _navigationService;
+        private readonly IServiceProvider _services;
 
-        public MenuViewModel(INavigation navigation)
+        public MenuViewModel(INavigation navigation, IServiceProvider services)
         {
             _navigationService = navigation;
+            _services = services;
             GoToPublishCommand = ReactiveCommand.Create(NavigateToPublish);
             GoToFeedCommand = ReactiveCommand.Create(NavigateToFeed);
         }
@@ -25,12 +28,14 @@ namespace N0str.ViewModels.Pages
 
         private void NavigateToPublish()
         {
-            _navigationService.OpenModal(new CreateEventViewModel(_navigationService));
+            var vm = _services.GetRequiredService<CreateEventViewModel>();
+            _navigationService.OpenModal(vm);
         }
 
         private void NavigateToFeed()
         {
-            _navigationService.NavigateTo(new FetchPostsViewModel());
+            var vm = _services.GetRequiredService<FetchPostsViewModel>();
+            _navigationService.NavigateTo(vm);
         }
     }
 }

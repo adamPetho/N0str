@@ -1,5 +1,7 @@
-﻿using N0str.Services;
+﻿using N0str.Nostr;
+using N0str.Services;
 using N0str.Views;
+using NNostr.Client;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -15,10 +17,12 @@ namespace N0str.ViewModels.Pages
     public class CreateEventViewModel : ViewModelBase
     {
         private string _content = string.Empty;
-        private int? _kind = 1;
+        private int _kind = 1;
         private bool _tagsExpanded = false;
 
         private readonly INavigation _navigationService;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IN0strClient _n0strClient;
 
         public string Content
         {
@@ -26,10 +30,10 @@ namespace N0str.ViewModels.Pages
             set => SetProperty(ref _content, value);
         }
 
-        public int? Kind
+        public int Kind
         {
             get => _kind;
-            set => SetProperty(ref _kind, value ?? 1);
+            set => SetProperty(ref _kind, value);
         }
 
         public bool TagsExpanded
@@ -45,9 +49,11 @@ namespace N0str.ViewModels.Pages
         public ReactiveCommand<Unit, Unit> SignAndPublishCommand { get; }
         public ICommand NavigateBack {  get; }
 
-        public CreateEventViewModel(INavigation navigationService)
+        public CreateEventViewModel(INavigation navigationService, IServiceProvider serviceProvider, IN0strClient noStrClient)
         {
             _navigationService = navigationService;
+            _serviceProvider = serviceProvider;
+            _n0strClient = noStrClient;
 
             NavigateBack = ReactiveCommand.Create(_navigationService.CloseModal);
 
@@ -69,10 +75,9 @@ namespace N0str.ViewModels.Pages
             var canPublish = this.WhenAnyValue(
                 x => x.Content,
                 x => x.Kind,
-                (content, kind) => !string.IsNullOrWhiteSpace(content) && kind.HasValue && kind >= 0
-            );
+                (content, kind) => !string.IsNullOrWhiteSpace(content) && kind >= 0);
 
-            SignAndPublishCommand = ReactiveCommand.Create(() =>
+            SignAndPublishCommand = ReactiveCommand.CreateFromTask(async () =>
             {
                 // Snapshot ready — handle publishing from outside or extend here
                 var snapshot = new
@@ -82,7 +87,11 @@ namespace N0str.ViewModels.Pages
                     Tags = Tags.Select(t => (t.Identifier, t.Data)).ToList()
                 };
 
-                //_navigationService.NavigateTo();
+                var unsignedNostrEvent = await _n0strClient.CreateNostrEvent(
+                    Content,
+                    Kind,
+                    Tags.Select(t => (TagIdentifier: t.Identifier, Data: new[] { t.Data })).ToList());
+
             }, canPublish);
 
         }

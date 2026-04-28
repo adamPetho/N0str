@@ -4,6 +4,7 @@ using N0str.Services.Events;
 using N0str.Services.Relay;
 using N0str.Services.Tor;
 using N0str.ViewModels;
+using N0str.ViewModels.Pages;
 
 namespace N0str.Services
 {
@@ -16,7 +17,12 @@ namespace N0str.Services
             collection.AddSingleton<IEventService, EventService>();
             collection.AddSingleton<IN0strClient, N0strClient>();
             collection.AddSingleton<INavigation, NavigationService>();
+
+            // ViewModels
             collection.AddTransient<MainViewModel>();
+            collection.AddTransient<MenuViewModel>();
+            collection.AddTransient<CreateEventViewModel>();
+            collection.AddTransient<FetchPostsViewModel>();
         }
     }
 }

@@ -1,11 +1,11 @@
-﻿using N0str.Services;
+﻿using Microsoft.Extensions.DependencyInjection;
+using N0str.Services;
 using N0str.ViewModels.Pages;
 
 namespace N0str.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        private readonly NavigationService _navigationService;
         private ViewModelBase _currentViewModel;
         private ViewModelBase? _modalViewModel;
 
@@ -27,13 +27,13 @@ namespace N0str.ViewModels
 
         public bool HasModal => _modalViewModel != null;
 
-        public MainViewModel()
+        public MainViewModel(INavigation navigationService, IServiceProvider services)
         {
-            _navigationService = new NavigationService();
-            _navigationService.CurrentViewModelChanged += OnCurrentViewModelChanged;
-            _navigationService.ModalViewModelChanged += OnCurrentModalViewChanged;
+            navigationService.CurrentViewModelChanged += OnCurrentViewModelChanged;
+            navigationService.ModalViewModelChanged += OnCurrentModalViewChanged;
 
-            _navigationService.NavigateTo(new MenuViewModel(_navigationService));
+            var menu = services.GetRequiredService<MenuViewModel>();
+            navigationService.NavigateTo(menu);
         }
 
         private void OnCurrentViewModelChanged(ViewModelBase viewModel)
