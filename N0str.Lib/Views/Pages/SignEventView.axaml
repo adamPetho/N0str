@@ -1,0 +1,92 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="300"
+             xmlns:vm="clr-namespace:N0str.ViewModels.Pages"
+             x:DataType="vm:SignEventViewModel"
+             x:Class="N0str.Views.Pages.SignEventView"
+             Background="Transparent">
+
+  <UserControl.Styles>
+    <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+      <Setter Property="BorderBrush" Value="#7B68EE44"/>
+      <Setter Property="Background" Value="#171717"/>
+    </Style>
+    <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+      <Setter Property="BorderBrush" Value="#3D3D3D"/>
+      <Setter Property="Background" Value="#171717"/>
+    </Style>
+  </UserControl.Styles>
+
+  <StackPanel Margin="24" Spacing="20">
+
+    <!-- Header -->
+    <StackPanel Spacing="4">
+      <StackPanel Orientation="Horizontal" Spacing="7">
+        <Ellipse Width="5" Height="5" Fill="#7B68EE" VerticalAlignment="Center"/>
+        <TextBlock Text="SIGN EVENT"
+                   FontSize="11"
+                   FontWeight="SemiBold"
+                   Foreground="#555555"
+                   LetterSpacing="1.2"/>
+      </StackPanel>
+      <TextBlock Text="Enter your private key to sign and broadcast this event."
+                 FontSize="12"
+                 FontWeight="Light"
+                 Foreground="#666666"
+                 TextWrapping="Wrap"
+                 Margin="0,4,0,0"/>
+    </StackPanel>
+
+    <!-- Private Key Input -->
+    <StackPanel Spacing="8">
+      <TextBlock Text="Private Key"
+                 FontSize="11"
+                 FontWeight="SemiBold"
+                 Foreground="#AAAAAA"/>
+      <TextBox PasswordChar="●"
+               Text="{Binding PrivateKey}"
+               Watermark="nsec1..."
+               Background="#171717"
+               Foreground="#E0E0E0"
+               BorderBrush="#2A2A2A"
+               BorderThickness="1"
+               CornerRadius="8"
+               Padding="12,10"
+               FontSize="13"
+               CaretBrush="#7B68EE"/>
+    </StackPanel>
+
+    <!-- Buttons -->
+    <Grid ColumnDefinitions="*,8,*" Margin="0,4,0,0">
+      <Button Grid.Column="0"
+              Command="{Binding BackCommand}"
+              Content="Back"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Center"
+              Background="#1C1C1C"
+              Foreground="#888888"
+              BorderBrush="#2A2A2A"
+              BorderThickness="1"
+              CornerRadius="8"
+              Padding="0,11"
+              FontSize="13"
+              FontWeight="SemiBold"/>
+      <Button Grid.Column="2"
+              Command="{Binding ConfirmCommand}"
+              Content="Sign &amp; Send"
+              HorizontalAlignment="Stretch"
+              HorizontalContentAlignment="Center"
+              Background="#7B68EE"
+              Foreground="#FFFFFF"
+              BorderThickness="0"
+              CornerRadius="8"
+              Padding="0,11"
+              FontSize="13"
+              FontWeight="SemiBold"/>
+    </Grid>
+
+  </StackPanel>
+
+</UserControl>
