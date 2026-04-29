@@ -18,6 +18,8 @@ namespace N0str.ViewModels.Pages
         private readonly IN0strClient _nostrClient;
         private string _privateKey = string.Empty;
 
+        private string? _errorMessage;
+
         public SignEventViewModel(INavigation navigationService, IServiceProvider services, IN0strClient nostrClient)
         {
             _navigationService = navigationService;
@@ -40,6 +42,17 @@ namespace N0str.ViewModels.Pages
             get => _privateKey;
             set => SetProperty(ref _privateKey, value);
         }
+        public string? ErrorMessage
+        {
+            get => _errorMessage;
+            set
+            {
+                SetProperty(ref _errorMessage, value);
+                OnPropertyChanged(nameof(HasError));
+            }
+        }
+
+        public bool HasError => !string.IsNullOrEmpty(_errorMessage);
 
         public ReactiveCommand<Unit, Unit> BackCommand { get; }
         public ReactiveCommand<Unit, Unit> ConfirmCommand { get; }
@@ -48,6 +61,7 @@ namespace N0str.ViewModels.Pages
         {
             UnsignedEvent = unsignedEvent;
             PrivateKey = string.Empty; // clear any previous keys
+            ErrorMessage = null;
         }
 
         private async Task SignAndPublish()
@@ -57,8 +71,25 @@ namespace N0str.ViewModels.Pages
                 return;
             }
 
-            NostrEvent signedEvent = await _nostrClient.SignEvent(PrivateKey, UnsignedEvent);
-            await _nostrClient.PublishEventAsync(signedEvent);
+            NostrEvent? signedEvent = default;
+            try
+            {
+                signedEvent = await _nostrClient.SignEvent(PrivateKey, UnsignedEvent);
+            }
+            catch (Exception) 
+            {
+                ErrorMessage = "Invalid private key.";
+                return;
+            }
+
+            try
+            {
+                await _nostrClient.PublishEventAsync(signedEvent);
+            }
+            catch (Exception)
+            {
+                ErrorMessage = "Couldn't broadcast the event.";
+            }
         } 
     }
 }

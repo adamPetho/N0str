@@ -56,6 +56,26 @@
                Padding="12,10"
                FontSize="13"
                CaretBrush="#7B68EE"/>
+
+        <!-- Error message -->
+          <Border Background="#2D1A1A"
+                  BorderBrush="#5C2A2A"
+                  BorderThickness="1"
+                  CornerRadius="6"
+                  Padding="10,8"
+                  IsVisible="{Binding HasError}">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBlock Text="⚠"
+                         FontSize="12"
+                         Foreground="#E05555"
+                         VerticalAlignment="Center"/>
+              <TextBlock Text="{Binding ErrorMessage}"
+                         FontSize="12"
+                         Foreground="#E05555"
+                         TextWrapping="Wrap"
+                         VerticalAlignment="Center"/>
+            </StackPanel>
+          </Border>
     </StackPanel>
 
     <!-- Buttons -->
