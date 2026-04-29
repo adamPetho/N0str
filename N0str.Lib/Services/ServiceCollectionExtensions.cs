@@ -22,6 +22,7 @@ namespace N0str.Services
             collection.AddTransient<MainViewModel>();
             collection.AddTransient<MenuViewModel>();
             collection.AddTransient<CreateEventViewModel>();
+            collection.AddTransient<SignEventViewModel>();
             collection.AddTransient<FetchPostsViewModel>();
         }
     }
