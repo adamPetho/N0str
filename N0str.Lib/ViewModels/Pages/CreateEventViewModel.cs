@@ -1,4 +1,5 @@
-﻿using N0str.Nostr;
+﻿using Microsoft.Extensions.DependencyInjection;
+using N0str.Nostr;
 using N0str.Services;
 using N0str.Views;
 using NNostr.Client;
@@ -80,12 +81,14 @@ namespace N0str.ViewModels.Pages
             SignAndPublishCommand = ReactiveCommand.CreateFromTask(async () =>
             {
 
-                var unsignedNostrEvent = await _n0strClient.CreateNostrEvent(
+                NostrEvent unsignedNostrEvent = await _n0strClient.CreateNostrEvent(
                     Content,
                     Kind,
                     Tags.Select(t => (TagIdentifier: t.Identifier, Data: new[] { t.Data })).ToList());
 
-                // _navigationService.OpenModal();
+                var signModal = _serviceProvider.GetRequiredService<SignEventViewModel>();
+                signModal.Initialize(unsignedNostrEvent);
+                _navigationService.OpenModal(signModal);
 
             }, canPublish);
 

@@ -18,6 +18,9 @@
         <DataTemplate DataType="vm:CreateEventViewModel">
 			<views:CreateEvent/>
         </DataTemplate>
+        <DataTemplate DataType="vm:SignEventViewModel">
+			<views:SignEventView/>
+        </DataTemplate>
         <DataTemplate DataType="vm:FetchPostsViewModel">
 			<views:FetchPostsView/>
         </DataTemplate>
