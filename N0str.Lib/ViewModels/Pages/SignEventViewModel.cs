@@ -2,28 +2,21 @@
 using N0str.Services;
 using NNostr.Client;
 using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reactive;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace N0str.ViewModels.Pages
 {
     public class SignEventViewModel : ViewModelBase
     {
         private readonly INavigation _navigationService;
-        private readonly IServiceProvider _serviceProvider;
         private readonly IN0strClient _nostrClient;
         private string _privateKey = string.Empty;
 
         private string? _errorMessage;
 
-        public SignEventViewModel(INavigation navigationService, IServiceProvider services, IN0strClient nostrClient)
+        public SignEventViewModel(INavigation navigationService, IN0strClient nostrClient)
         {
             _navigationService = navigationService;
-            _serviceProvider  = services;
             _nostrClient = nostrClient;
 
             BackCommand = ReactiveCommand.Create(() =>_navigationService.CloseModal());
@@ -60,7 +53,7 @@ namespace N0str.ViewModels.Pages
         public void Initialize(NostrEvent unsignedEvent)
         {
             UnsignedEvent = unsignedEvent;
-            PrivateKey = string.Empty; // clear any previous keys
+            PrivateKey = string.Empty;
             ErrorMessage = null;
         }
 
@@ -89,7 +82,10 @@ namespace N0str.ViewModels.Pages
             catch (Exception)
             {
                 ErrorMessage = "Couldn't broadcast the event.";
+                return;
             }
+
+            //_navigationService.OpenModal();
         } 
     }
 }
