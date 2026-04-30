@@ -1,4 +1,5 @@
-﻿using N0str.Nostr;
+﻿using Microsoft.Extensions.DependencyInjection;
+using N0str.Nostr;
 using N0str.Services;
 using NNostr.Client;
 using ReactiveUI;
@@ -9,14 +10,16 @@ namespace N0str.ViewModels.Pages
     public class SignEventViewModel : ViewModelBase
     {
         private readonly INavigation _navigationService;
+        private readonly IServiceProvider _services;
         private readonly IN0strClient _nostrClient;
         private string _privateKey = string.Empty;
 
         private string? _errorMessage;
 
-        public SignEventViewModel(INavigation navigationService, IN0strClient nostrClient)
+        public SignEventViewModel(INavigation navigationService, IServiceProvider serviceProvider ,IN0strClient nostrClient)
         {
             _navigationService = navigationService;
+            _services = serviceProvider;
             _nostrClient = nostrClient;
 
             BackCommand = ReactiveCommand.Create(() =>_navigationService.CloseModal());
@@ -59,11 +62,12 @@ namespace N0str.ViewModels.Pages
 
         private async Task SignAndPublish()
         {
+            /*
             if (PrivateKey is null || UnsignedEvent is null)
             {
                 return;
             }
-
+            
             NostrEvent? signedEvent = default;
             try
             {
@@ -83,9 +87,10 @@ namespace N0str.ViewModels.Pages
             {
                 ErrorMessage = "Couldn't broadcast the event.";
                 return;
-            }
+            }*/
 
-            //_navigationService.OpenModal();
+            var successVm = _services.GetRequiredService<SuccessfulBroadcastViewModel>();
+            _navigationService.OpenModal(successVm);
         } 
     }
 }

@@ -21,6 +21,9 @@
         <DataTemplate DataType="vm:SignEventViewModel">
 			<views:SignEventView/>
         </DataTemplate>
+        <DataTemplate DataType="vm:SuccessfulBroadcastViewModel">
+			<views:SuccessfulBroadcastView/>
+        </DataTemplate>
         <DataTemplate DataType="vm:FetchPostsViewModel">
 			<views:FetchPostsView/>
         </DataTemplate>
