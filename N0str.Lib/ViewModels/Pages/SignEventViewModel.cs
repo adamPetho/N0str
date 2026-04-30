@@ -62,7 +62,7 @@ namespace N0str.ViewModels.Pages
 
         private async Task SignAndPublish()
         {
-            /*
+            
             if (PrivateKey is null || UnsignedEvent is null)
             {
                 return;
@@ -87,7 +87,7 @@ namespace N0str.ViewModels.Pages
             {
                 ErrorMessage = "Couldn't broadcast the event.";
                 return;
-            }*/
+            }
 
             var successVm = _services.GetRequiredService<SuccessfulBroadcastViewModel>();
             _navigationService.OpenModal(successVm);
