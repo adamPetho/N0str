@@ -1,6 +1,4 @@
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
 using N0str.ViewModels.Pages;
 
 namespace N0str.Views.Pages;

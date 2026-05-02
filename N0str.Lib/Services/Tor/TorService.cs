@@ -1,6 +1,5 @@
 ﻿using OnionSharp.Microservices;
 using OnionSharp.Tor;
-using OnionSharp.Tor.Models;
 using System.Net;
 
 namespace N0str.Services.Tor

@@ -1,8 +1,5 @@
-﻿using Metsys.Bson;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using N0str.Services;
-using NBitcoin;
-using NBitcoin.RPC;
 using ReactiveUI;
 using System.Windows.Input;
 

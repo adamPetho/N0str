@@ -1,17 +1,7 @@
 ﻿using N0str.Factory;
-using N0str.Nostr;
 using N0str.Services.Tor;
-using N0str.Views;
 using NNostr.Client;
 using NNostr.Client.Protocols;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Net.WebSockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace N0str.Services.Relay
 {

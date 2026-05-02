@@ -1,16 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using N0str.Nostr;
 using N0str.Services;
-using N0str.Views;
 using NNostr.Client;
 using ReactiveUI;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reactive;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace N0str.ViewModels.Pages
