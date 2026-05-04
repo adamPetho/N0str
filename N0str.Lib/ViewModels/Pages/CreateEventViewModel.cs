@@ -5,7 +5,6 @@ using N0str.Services;
 using NNostr.Client;
 using ReactiveUI;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Input;
@@ -14,8 +13,6 @@ namespace N0str.ViewModels.Pages
 {
     public class CreateEventViewModel : ViewModelBase
     {
-        private readonly IObservable<bool> _canPublish;
-
         private string _content = string.Empty;
         private string _kindText = string.Empty;
         private bool _tagsExpanded = false;
