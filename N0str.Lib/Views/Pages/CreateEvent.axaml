@@ -26,6 +26,19 @@
           <Setter Property="BorderThickness" Value="0"/>
         </Style>
 
+        <Style Selector="TextBox#KindInput /template/ Border#PART_BorderElement">
+          <Setter Property="Background" Value="#242424"/>
+          <Setter Property="BorderThickness" Value="0"/>
+          <Setter Property="CornerRadius" Value="8"/>
+        </Style>
+        <Style Selector="TextBox#KindInput:focus /template/ Border#PART_BorderElement">
+          <Setter Property="Background" Value="#242424"/>
+          <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style Selector="TextBox#KindInput:pointerover /template/ Border#PART_BorderElement">
+          <Setter Property="Background" Value="#242424"/>
+          <Setter Property="BorderThickness" Value="0"/>
+        </Style>
 </UserControl.Styles>
 
   <ScrollViewer>
@@ -60,18 +73,18 @@
                        LetterSpacing="1.2"/>
           </StackPanel>
               <TextBox Name="ContentInput"
-                 Text="{Binding Content}"
-                 AcceptsReturn="True"
-                 TextWrapping="Wrap"
-                 Height="120"
-                 Watermark="What's on your mind?"
-                 Background="#242424"
-                 Foreground="#E0E0E0"
-                 BorderThickness="0"
-                 Padding="12"
-                 FontSize="14"
-                 FontWeight="Light"
-                 CaretBrush="#7B68EE"/>
+             Text="{Binding Content}"
+             AcceptsReturn="True"
+             TextWrapping="Wrap"
+             Height="120"
+             Watermark="What's on your mind?"
+             Background="#242424"
+             Foreground="#E0E0E0"
+             BorderThickness="0"
+             Padding="12"
+             FontSize="14"
+             FontWeight="Light"
+             CaretBrush="#7B68EE"/>
         </StackPanel>
       </Border>
 
@@ -90,21 +103,18 @@
                        Foreground="#555555"
                        LetterSpacing="1.2"/>
           </StackPanel>
-          <Grid ColumnDefinitions="*, Auto">
-            <NumericUpDown Grid.Column="0"
-                           Value="{Binding Kind}"
-                           Minimum="0"
-                           Maximum="65535"
-                           Increment="1"
-                           FormatString="0"
-                           Background="Transparent"
-                           Foreground="#E0E0E0"
-                           BorderThickness="0"
-                           FontSize="22"
-                           FontWeight="Medium"
-                           Padding="0"
-                           Width="100"/>
-          </Grid>
+
+          <TextBox Name="KindInput"
+                   Text="{Binding KindText}"
+                   Watermark="e.g. 1"
+                   Background="#242424"
+                   Foreground="#E0E0E0"
+                   BorderThickness="0"
+                   CornerRadius="8"
+                   Padding="12"
+                   FontSize="14"
+                   FontWeight="Light"
+                   CaretBrush="#7B68EE"/>
         </StackPanel>
       </Border>
 

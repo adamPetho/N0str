@@ -11,8 +11,10 @@ namespace N0str.ViewModels.Pages
 {
     public class CreateEventViewModel : ViewModelBase
     {
+        private readonly IObservable<bool> _canPublish;
+
         private string _content = string.Empty;
-        private int _kind = 1;
+        private string _kindText = "1";
         private bool _tagsExpanded = false;
 
         private readonly INavigation _navigationService;
@@ -22,14 +24,26 @@ namespace N0str.ViewModels.Pages
         public string Content
         {
             get => _content;
-            set => SetProperty(ref _content, value);
+            set 
+            {
+                SetProperty(ref _content, value);
+            } 
         }
 
-        public int Kind
+        public string KindText
         {
-            get => _kind;
-            set => SetProperty(ref _kind, value);
+            get => _kindText;
+            set
+            {
+                // only allow digits
+                if (value.All(char.IsDigit) || string.IsNullOrEmpty(value))
+                {
+                    SetProperty(ref _kindText, value);
+                }
+            }
         }
+
+        public int Kind => int.TryParse(_kindText, out var k) ? k : 1;
 
         public bool TagsExpanded
         {
@@ -67,10 +81,10 @@ namespace N0str.ViewModels.Pages
                 Tags.Remove(tag);
             });
 
-            var canPublish = this.WhenAnyValue(
+            _canPublish = this.WhenAnyValue(
                 x => x.Content,
-                x => x.Kind,
-                (content, kind) => !string.IsNullOrWhiteSpace(content) && kind >= 0);
+                x => x.KindText,
+                (content, kind) => !string.IsNullOrWhiteSpace(content) && int.TryParse(kind, out var k) && k >= 0);
 
             SignAndPublishCommand = ReactiveCommand.CreateFromTask(async () =>
             {
@@ -84,7 +98,7 @@ namespace N0str.ViewModels.Pages
                 signModal.Initialize(unsignedNostrEvent);
                 _navigationService.OpenModal(signModal);
 
-            }, canPublish);
+            }, _canPublish);
 
         }
     }
