@@ -8,20 +8,23 @@
              x:Class="N0str.Views.Pages.CreateEvent">
 
     <UserControl.Styles>
-      <Style Selector="TextBox">
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="CaretBrush" Value="#7B68EE"/>
-      </Style>
-      <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Background" Value="#525252"/>
-        <Setter Property="BoxShadow" Value="0 0 0 0 Transparent"/>
-      </Style>
-      <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Background" Value="#525252"/>
-      </Style>
+        <Style Selector="TextBox#ContentInput /template/ Border#PART_BorderElement">
+          <Setter Property="Background" Value="#242424"/>
+          <Setter Property="BorderThickness" Value="0"/>
+          <Setter Property="CornerRadius" Value="8"/>
+        </Style>
+        <Style Selector="TextBox#ContentInput:focus /template/ Border#PART_BorderElement">
+          <Setter Property="Background" Value="#242424"/>
+          <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style Selector="TextBox#ContentInput:pointerover /template/ Border#PART_BorderElement">
+          <Setter Property="Background" Value="#242424"/>
+          <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style Selector="TextBox#ContentInput:disabled /template/ Border#PART_BorderElement">
+          <Setter Property="Background" Value="#242424"/>
+          <Setter Property="BorderThickness" Value="0"/>
+        </Style>
 
 </UserControl.Styles>
 
@@ -56,15 +59,16 @@
                        Foreground="#555555"
                        LetterSpacing="1.2"/>
           </StackPanel>
-              <TextBox Text="{Binding Content}"
+              <TextBox Name="ContentInput"
+                 Text="{Binding Content}"
                  AcceptsReturn="True"
                  TextWrapping="Wrap"
-                 Height="100"
+                 Height="120"
                  Watermark="What's on your mind?"
-                 Background="Transparent"
+                 Background="#242424"
                  Foreground="#E0E0E0"
                  BorderThickness="0"
-                 Padding="0"
+                 Padding="12"
                  FontSize="14"
                  FontWeight="Light"
                  CaretBrush="#7B68EE"/>
