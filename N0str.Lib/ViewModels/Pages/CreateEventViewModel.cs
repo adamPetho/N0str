@@ -1,10 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DynamicData.Binding;
+using Microsoft.Extensions.DependencyInjection;
 using N0str.Nostr;
 using N0str.Services;
 using NNostr.Client;
 using ReactiveUI;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Reactive;
+using System.Reactive.Linq;
 using System.Windows.Input;
 
 namespace N0str.ViewModels.Pages
@@ -14,7 +17,7 @@ namespace N0str.ViewModels.Pages
         private readonly IObservable<bool> _canPublish;
 
         private string _content = string.Empty;
-        private string _kindText = "1";
+        private string _kindText = string.Empty;
         private bool _tagsExpanded = false;
 
         private readonly INavigation _navigationService;
@@ -27,6 +30,7 @@ namespace N0str.ViewModels.Pages
             set 
             {
                 SetProperty(ref _content, value);
+                OnPropertyChanged(nameof(IsValid));
             } 
         }
 
@@ -35,13 +39,13 @@ namespace N0str.ViewModels.Pages
             get => _kindText;
             set
             {
-                // only allow digits
-                if (value.All(char.IsDigit) || string.IsNullOrEmpty(value))
-                {
-                    SetProperty(ref _kindText, value);
-                }
+                SetProperty(ref _kindText, value);
+                OnPropertyChanged(nameof(IsValid));
             }
         }
+        public bool IsValid => !string.IsNullOrWhiteSpace(Content)
+                    && int.TryParse(KindText, out var k)
+                    && k >= 0;
 
         public int Kind => int.TryParse(_kindText, out var k) ? k : 1;
 
@@ -81,10 +85,8 @@ namespace N0str.ViewModels.Pages
                 Tags.Remove(tag);
             });
 
-            _canPublish = this.WhenAnyValue(
-                x => x.Content,
-                x => x.KindText,
-                (content, kind) => !string.IsNullOrWhiteSpace(content) && int.TryParse(kind, out var k) && k >= 0);
+            var canPublish = this.WhenPropertyChanged(x => x.IsValid)
+                     .Select(x => x.Value);
 
             SignAndPublishCommand = ReactiveCommand.CreateFromTask(async () =>
             {
@@ -98,7 +100,7 @@ namespace N0str.ViewModels.Pages
                 signModal.Initialize(unsignedNostrEvent);
                 _navigationService.OpenModal(signModal);
 
-            }, _canPublish);
+            }, canPublish);
 
         }
     }
