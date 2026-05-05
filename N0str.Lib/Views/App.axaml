@@ -24,6 +24,9 @@
         <DataTemplate DataType="vm:SuccessfulBroadcastViewModel">
 			<views:SuccessfulBroadcastView/>
         </DataTemplate>
+        <DataTemplate DataType="vm:PubKeyToFetchViewModel">
+			<views:PubKeyToFetchView/>
+        </DataTemplate>
         <DataTemplate DataType="vm:FetchPostsViewModel">
 			<views:FetchPostsView/>
         </DataTemplate>
