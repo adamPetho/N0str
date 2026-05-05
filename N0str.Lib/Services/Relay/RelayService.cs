@@ -1,4 +1,5 @@
 ﻿using N0str.Factory;
+using N0str.Services.Events;
 using N0str.Services.Tor;
 using NNostr.Client;
 using NNostr.Client.Protocols;
@@ -12,7 +13,6 @@ namespace N0str.Services.Relay
         private INostrClient NostrClient => _nostrClient ?? throw new InvalidOperationException("NostrClient is null. Not connected to relays.");
 
         public event Action<(string, NostrEvent)>? EventReceived;
-        public event Action<string>? SuccessfulSubscription;
 
         public RelayService(ITorService torService)
         {
@@ -43,13 +43,11 @@ namespace N0str.Services.Relay
             await NostrClient.SendEventsAndWaitUntilReceived([nostrEvent], ct);
         }
 
-        public async Task CreateSubscriptionAsync(string pubkey, CancellationToken ct = default)
+        public async Task CreateSubscriptionAsync(string pubkey, string subscriptionID, CancellationToken ct = default)
         {
             string pubKeyHex = NIP19.FromNIP19Npub(pubkey).ToHex();
-            string subscriptionID = Guid.NewGuid().ToString();
             await NostrClient.CreateSubscription(subscriptionID, [new() { Kinds = [1], Authors = [pubKeyHex] }], ct).ConfigureAwait(false);
 
-            SuccessfulSubscription?.Invoke(subscriptionID);
         }
 
         public void Dispose()
