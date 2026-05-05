@@ -16,7 +16,7 @@ namespace N0str.ViewModels.Pages
 
         private string? _errorMessage;
 
-        public SignEventViewModel(INavigation navigationService, IServiceProvider serviceProvider ,IN0strClient nostrClient)
+        public SignEventViewModel(INavigation navigationService, IServiceProvider serviceProvider, IN0strClient nostrClient)
         {
             _navigationService = navigationService;
             _services = serviceProvider;
