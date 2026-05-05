@@ -3,6 +3,7 @@ using N0str.Services.Relay;
 using NBitcoin.Secp256k1;
 using NNostr.Client;
 using NNostr.Client.Protocols;
+using System.Collections.Concurrent;
 
 namespace N0str.Nostr
 {
@@ -60,6 +61,15 @@ namespace N0str.Nostr
         public IEnumerable<NostrEvent> FetchAllByAuthor(string pubkey)
         {
             return _eventService.GetEventsByAuthor(pubkey);
+        }
+
+        public async Task SubscribeToPubkey(string pubkey, CancellationToken ct = default)
+        {
+            string subscriptionID = Guid.NewGuid().ToString();
+
+            _eventService.RegisterNewSubscriptionID(subscriptionID);
+
+            await _relayService.CreateSubscriptionAsync(pubkey, subscriptionID, ct);
         }
     }
 }
