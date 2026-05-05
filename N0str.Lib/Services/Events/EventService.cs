@@ -13,10 +13,15 @@ namespace N0str.Services.Events
             _relayService = relayService;
 
             _relayService.EventReceived += OnNostrEventsReceived;
-            _relayService.SuccessfulSubscription += OnSuccessfulSubscription;
         }
+
+        // RandomGuid - one byte placeholder
         public ConcurrentDictionary<string, byte> SubscriptionIDs { get; } = new();
+
+        // eventID - Nostr Event
         private ConcurrentDictionary<string, NostrEvent> ReceivedEvents { get; } = new();
+
+        // Event PubKey (Author) - Bag of eventIDs
         private ConcurrentDictionary<string, ConcurrentBag<string>> EventsByAuthor { get;  } = new();
 
         public event Action<NostrEvent>? RelevantEventReceived;
@@ -31,11 +36,6 @@ namespace N0str.Services.Events
             ProcessRelevantEvent(e.nostrEvent);
         }
 
-        public void OnSuccessfulSubscription(string subscriptionID)
-        {
-            SubscriptionIDs.TryAdd(subscriptionID, 0);
-        }
-
         public IEnumerable<NostrEvent> GetEventsByAuthor(string pubkey)
         {
             if (EventsByAuthor.TryGetValue(pubkey, out var ids))
@@ -47,17 +47,20 @@ namespace N0str.Services.Events
         {
             if (ReceivedEvents.TryAdd(nostrEvent.Id, nostrEvent))
             {
-                EventsByAuthor
-                    .GetOrAdd(nostrEvent.PublicKey, _ => [])
-                    .Add(nostrEvent.Id);
+                EventsByAuthor.GetOrAdd(nostrEvent.PublicKey, _ => []).Add(nostrEvent.Id);
 
                 RelevantEventReceived?.Invoke(nostrEvent);
             }
         }
+
+        public void RegisterNewSubscriptionID(string subscriptionID)
+        {
+            SubscriptionIDs.TryAdd(subscriptionID, 0);
+        }
+
         public void Dispose()
         {
             _relayService.EventReceived -= OnNostrEventsReceived;
-            _relayService.SuccessfulSubscription -= OnSuccessfulSubscription;
         }
     }
 }

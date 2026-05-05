@@ -6,5 +6,6 @@ namespace N0str.Services.Events
     {
         event Action<NostrEvent>? RelevantEventReceived;
         IEnumerable<NostrEvent> GetEventsByAuthor(string pubkey);
+        void RegisterNewSubscriptionID(string subscriptionID);
     }
 }
