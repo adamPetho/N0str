@@ -11,7 +11,7 @@
     <!-- LEFT: Publish -->
     <Border Grid.Column="0"
             Background="#2B2B2B"
-            Padding="20">
+            Padding="0">
       <Button Command="{Binding GoToPublishCommand}"
               Background="Transparent"
               BorderThickness="0"
@@ -38,7 +38,7 @@
     <!-- RIGHT: Fetch -->
     <Border Grid.Column="1"
             Background="#1F1F1F"
-            Padding="20">
+            Padding="0">
       <Button Command="{Binding GoToFeedCommand}"
               Background="Transparent"
               BorderThickness="0"
