@@ -27,9 +27,6 @@
         <DataTemplate DataType="vm:PubKeyToFetchViewModel">
 			<views:PubKeyToFetchView/>
         </DataTemplate>
-        <DataTemplate DataType="vm:FetchPostsViewModel">
-			<views:FetchPostsView/>
-        </DataTemplate>
     </Application.DataTemplates>
 
     <Application.Resources>

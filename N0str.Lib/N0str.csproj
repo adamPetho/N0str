@@ -32,9 +32,6 @@
       <SubType>Code</SubType>
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
-    <Compile Update="Views\Pages\FetchPostsView.axaml.cs">
-      <DependentUpon>FetchPostsView.axaml</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
