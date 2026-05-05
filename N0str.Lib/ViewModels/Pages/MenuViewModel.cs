@@ -31,8 +31,8 @@ namespace N0str.ViewModels.Pages
 
         private void NavigateToFeed()
         {
-            var vm = _services.GetRequiredService<FetchPostsViewModel>();
-            _navigationService.NavigateTo(vm);
+            var vm = _services.GetRequiredService<PubKeyToFetchViewModel>();
+            _navigationService.OpenModal(vm);
         }
     }
 }
