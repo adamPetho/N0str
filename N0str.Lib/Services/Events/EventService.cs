@@ -13,6 +13,12 @@ namespace N0str.Services.Events
             _relayService = relayService;
 
             _relayService.EventReceived += OnNostrEventsReceived;
+            _relayService.EoseReceived += OnEoseReceived;
+        }
+
+        private void OnEoseReceived(string obj)
+        {
+            EoseReceived?.Invoke(obj);
         }
 
         // RandomGuid - one byte placeholder
@@ -25,6 +31,7 @@ namespace N0str.Services.Events
         private ConcurrentDictionary<string, ConcurrentBag<string>> EventsByAuthor { get;  } = new();
 
         public event Action<NostrEvent>? RelevantEventReceived;
+        public event Action<string>? EoseReceived;
 
         public void OnNostrEventsReceived((string subscriptionId, NostrEvent nostrEvent) e)
         {
@@ -61,6 +68,7 @@ namespace N0str.Services.Events
         public void Dispose()
         {
             _relayService.EventReceived -= OnNostrEventsReceived;
+            _relayService.EoseReceived -= OnEoseReceived;
         }
     }
 }

@@ -13,6 +13,7 @@ namespace N0str.Services.Relay
         private INostrClient NostrClient => _nostrClient ?? throw new InvalidOperationException("NostrClient is null. Not connected to relays.");
 
         public event Action<(string, NostrEvent)>? EventReceived;
+        public event Action<string>? EoseReceived;
 
         public RelayService(ITorService torService)
         {
@@ -28,6 +29,7 @@ namespace N0str.Services.Relay
 
             _nostrClient = nostrClient;
             NostrClient.EventsReceived += OnNostrEventsReceived;
+            NostrClient.EoseReceived += OnEoseReceived;
         }
 
         private void OnNostrEventsReceived(object? sender, (string subscriptionId, NostrEvent[] events) e)
@@ -36,6 +38,11 @@ namespace N0str.Services.Relay
             {
                 EventReceived?.Invoke((e.subscriptionId, ev));
             }
+        }
+
+        private void OnEoseReceived(object? sender, string e)
+        {
+            EoseReceived?.Invoke(e);
         }
 
         public async Task PublishEventAsync(NostrEvent nostrEvent, CancellationToken ct = default)
@@ -53,6 +60,7 @@ namespace N0str.Services.Relay
         public void Dispose()
         {
             NostrClient.EventsReceived -= OnNostrEventsReceived;
+            NostrClient.EoseReceived -= OnEoseReceived;
             NostrClient.Dispose();
         }
     }

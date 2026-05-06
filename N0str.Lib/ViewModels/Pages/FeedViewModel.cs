@@ -41,8 +41,7 @@ namespace N0str.ViewModels.Pages
             _pubkey = pubkey;
 
             _eventService.RelevantEventReceived += OnEventReceived;
-            // TODO: handle EOSE for loading state
-            // _eventService.EOSEReceived += OnEOSEReceived
+            _eventService.EoseReceived += OnEOSEReceived;
 
             await _nostrClient.SubscribeToPubkey(pubkey);
 
@@ -84,7 +83,7 @@ namespace N0str.ViewModels.Pages
         public void Dispose()
         {
             _eventService.RelevantEventReceived -= OnEventReceived;
-            // _eventService.EOSEReceived -= OnEOSEReceived;
+            _eventService.EoseReceived -= OnEOSEReceived;
             // cancel any pending subscriptions
             // _nostrClient.Unsubscribe(_pubkey);
         }

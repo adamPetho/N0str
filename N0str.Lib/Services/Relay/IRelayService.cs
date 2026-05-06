@@ -9,5 +9,6 @@ namespace N0str.Services.Relay
         Task CreateSubscriptionAsync(string pubkey, string subscriptionID, CancellationToken ct = default);
 
         event Action<(string, NostrEvent)>? EventReceived;
+        event Action<string>? EoseReceived;
     }
 }
