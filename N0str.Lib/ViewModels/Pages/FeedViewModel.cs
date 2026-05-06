@@ -1,18 +1,17 @@
 ﻿using Avalonia.Threading;
 using N0str.Nostr;
+using N0str.Services;
 using N0str.Services.Events;
 using NNostr.Client;
-using System;
-using System.Collections.Generic;
+using ReactiveUI;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reactive;
 
 namespace N0str.ViewModels.Pages
 {
-    public class FeedViewModel : ViewModelBase
+    public class FeedViewModel : ViewModelBase, IDisposable
     {
+        private readonly INavigation _navigateService;
         private readonly IN0strClient _nostrClient;
         private readonly IEventService _eventService;
         private string? _pubkey;
@@ -26,31 +25,37 @@ namespace N0str.ViewModels.Pages
             private set => SetProperty(ref _isLoading, value);
         }
 
-        public FeedViewModel(IN0strClient nostrClient, IEventService eventService)
+        public FeedViewModel(INavigation navigateService, IN0strClient nostrClient, IEventService eventService)
         {
+            _navigateService = navigateService;
             _nostrClient = nostrClient;
             _eventService = eventService;
+
+            BackCommand = ReactiveCommand.Create(() => _navigateService.NavigateBack());
         }
+
+        public ReactiveCommand<Unit, Unit> BackCommand { get; }
 
         public async Task InitializeAsync(string pubkey)
         {
             _pubkey = pubkey;
-            IsLoading = true;
+
+            _eventService.RelevantEventReceived += OnEventReceived;
+            // TODO: handle EOSE for loading state
+            // _eventService.EOSEReceived += OnEOSEReceived
 
             await _nostrClient.SubscribeToPubkey(pubkey);
 
-            // Load whatever we already have (may be empty)
+            // Load whatever we already have (empty at first)
             var existing = _nostrClient.FetchAllByAuthor(pubkey);
 
             foreach (var ev in existing.OrderByDescending(e => e.CreatedAt))
             {
-                Events.Add(ev);
+                if (Events.Any(e => e.Id == ev.Id))
+                    return;
+
+                Events.Insert(0, ev);
             }
-
-            // Subscribe to live updates
-            _eventService.RelevantEventReceived += OnEventReceived;
-
-            // TODO: handle EOSE for loading state
         }
 
         private void OnEventReceived(NostrEvent ev)
@@ -79,7 +84,9 @@ namespace N0str.ViewModels.Pages
         public void Dispose()
         {
             _eventService.RelevantEventReceived -= OnEventReceived;
-            //_nostrClient.EOSEReceived -= OnEOSEReceived;
+            // _eventService.EOSEReceived -= OnEOSEReceived;
+            // cancel any pending subscriptions
+            // _nostrClient.Unsubscribe(_pubkey);
         }
     }
 }
