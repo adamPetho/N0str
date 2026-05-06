@@ -1,4 +1,5 @@
 ﻿using N0str.ViewModels;
+using N0str.ViewModels.Pages;
 
 namespace N0str.Services
 {
@@ -18,7 +19,10 @@ namespace N0str.Services
         {
             if (_navigationStack.Count > 1)
             {
-                _navigationStack.Pop();
+                var popped = _navigationStack.Pop();
+                if (popped is IDisposable disposable)
+                    disposable.Dispose();
+
                 var previousViewModel = _navigationStack.Peek();
                 CurrentViewModelChanged?.Invoke(previousViewModel);
             }
