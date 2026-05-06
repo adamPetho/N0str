@@ -28,7 +28,7 @@ namespace N0str.ViewModels.Pages
                 x => x.PublicKey,
                 key => !string.IsNullOrWhiteSpace(key));
 
-            FetchEventsCommand = ReactiveCommand.CreateFromTask(FetchEventsFromPubKey, canConfirm);
+            NavigateToFeedCommand = ReactiveCommand.CreateFromTask(NavigateToFeed, canConfirm);
         }
 
         public string PublicKey
@@ -54,9 +54,9 @@ namespace N0str.ViewModels.Pages
         public bool HasError => !string.IsNullOrEmpty(_errorMessage);
 
         public ReactiveCommand<Unit, Unit> BackCommand { get; }
-        public ReactiveCommand<Unit, Unit> FetchEventsCommand { get; }
+        public ReactiveCommand<Unit, Unit> NavigateToFeedCommand { get; }
 
-        private async Task FetchEventsFromPubKey()
+        private async Task NavigateToFeed()
         {
             var requestedPubKey = PublicKey;
 

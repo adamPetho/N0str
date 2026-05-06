@@ -92,7 +92,7 @@
               FontSize="13"
               FontWeight="SemiBold"/>
       <Button Grid.Column="2"
-              Command="{Binding FetchEventsCommand}"
+              Command="{Binding NavigateToFeedCommand}"
               Content="Fetch events"
               HorizontalAlignment="Stretch"
               HorizontalContentAlignment="Center"
