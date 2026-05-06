@@ -60,7 +60,11 @@ namespace N0str.ViewModels.Pages
         {
             var requestedPubKey = PublicKey;
 
-            //_navigationService.NavigateTo();
+            var feedVM = _serviceProvider.GetRequiredService<FeedViewModel>();
+
+            await feedVM.InitializeAsync(requestedPubKey);
+
+            _navigationService.NavigateTo(feedVM);
         }
 
     }
