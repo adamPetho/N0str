@@ -46,7 +46,7 @@ namespace N0str.Services.Relay
         public async Task CreateSubscriptionAsync(string pubkey, string subscriptionID, CancellationToken ct = default)
         {
             string pubKeyHex = NIP19.FromNIP19Npub(pubkey).ToHex();
-            await NostrClient.CreateSubscription(subscriptionID, [new() { Kinds = [1], Authors = [pubKeyHex] }], ct).ConfigureAwait(false);
+            await NostrClient.CreateSubscription(subscriptionID, [new() { Kinds = [1], Authors = [pubKeyHex] }], ct);
 
         }
 
