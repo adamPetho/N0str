@@ -25,6 +25,7 @@ namespace N0str.Services
             collection.AddTransient<SignEventViewModel>();
             collection.AddTransient<SuccessfulBroadcastViewModel>();
             collection.AddTransient<PubKeyToFetchViewModel>();
+            collection.AddTransient<FeedViewModel>();
         }
     }
 }
