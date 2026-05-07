@@ -12,6 +12,9 @@
     </Application.Styles>
 
     <Application.DataTemplates>
+        <DataTemplate DataType="vm:LoadingViewModel">
+            <views:LoadingWindow/>
+        </DataTemplate>
         <DataTemplate DataType="vm:MenuViewModel">
             <views:MenuView/>
         </DataTemplate>
