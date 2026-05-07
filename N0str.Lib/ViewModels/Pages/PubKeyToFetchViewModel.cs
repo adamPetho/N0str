@@ -65,6 +65,7 @@ namespace N0str.ViewModels.Pages
             await feedVM.InitializeAsync(requestedPubKey);
 
             _navigationService.NavigateTo(feedVM);
+            _navigationService.CloseModal();
         }
 
     }
