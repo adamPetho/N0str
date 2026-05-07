@@ -1,5 +1,4 @@
-﻿using Avalonia.Threading;
-using N0str.Nostr;
+﻿using N0str.Nostr;
 using N0str.Services;
 using N0str.Services.Events;
 using NNostr.Client;
@@ -25,6 +24,12 @@ namespace N0str.ViewModels.Pages
             private set => SetProperty(ref _isLoading, value);
         }
 
+        public string? Pubkey
+        {
+            get => _pubkey;
+            set => SetProperty(ref _pubkey, value);
+        }
+
         public FeedViewModel(INavigation navigateService, IN0strClient nostrClient, IEventService eventService)
         {
             _navigateService = navigateService;
@@ -38,12 +43,19 @@ namespace N0str.ViewModels.Pages
 
         public async Task InitializeAsync(string pubkey)
         {
-            _pubkey = pubkey;
+            Pubkey = pubkey;
 
             _eventService.RelevantEventReceived += OnEventReceived;
             _eventService.EoseReceived += OnEOSEReceived;
 
-            await _nostrClient.SubscribeToPubkey(pubkey);
+            try
+            {
+                await _nostrClient.SubscribeToPubkey(pubkey);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
 
             // Load whatever we already have (empty at first)
             var existing = _nostrClient.FetchAllByAuthor(pubkey);
@@ -59,25 +71,20 @@ namespace N0str.ViewModels.Pages
 
         private void OnEventReceived(NostrEvent ev)
         {
-            if (ev.PublicKey != _pubkey || ev.Kind != 1)
+            // Prevent duplicates in UI
+            if (Events.Any(e => e.Id == ev.Id))
                 return;
 
-            Dispatcher.UIThread.Post(() =>
-            {
-                // Prevent duplicates in UI
-                if (Events.Any(e => e.Id == ev.Id))
-                    return;
+            Events.Insert(0, ev);
 
-                Events.Insert(0, ev);
-            });
         }
 
         private void OnEOSEReceived(string subscriptionId)
         {
-            Dispatcher.UIThread.Post(() =>
+            if (IsLoading)
             {
                 IsLoading = false;
-            });
+            }
         }
 
         public void Dispose()
