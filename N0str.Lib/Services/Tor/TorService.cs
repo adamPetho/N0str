@@ -1,6 +1,7 @@
 ﻿using OnionSharp.Microservices;
 using OnionSharp.Tor;
 using System.Net;
+using System.Net.Sockets;
 
 namespace N0str.Services.Tor
 {
@@ -17,16 +18,21 @@ namespace N0str.Services.Tor
 
         public async Task InitializeAsync(CancellationToken ct = default)
         {
-            try
-            {
-                _torProcessManager = new TorProcessManager(_torSettings);
+            const int maxAttempts = 3;
 
-                await _torProcessManager.StartAsync(attempts: 3, ct);
-            }
-            catch (Exception ex) 
+            for (int i = 1; i <= maxAttempts; i++) 
             {
-                Console.WriteLine($"Couldn't initialize Tor. {ex}");
-                throw;
+                try
+                {
+                    _torProcessManager = new TorProcessManager(_torSettings);
+                    await _torProcessManager.StartAsync(attempts: 3, ct);
+                    return;
+                }
+                catch (Exception ex) when (i < maxAttempts)
+                {
+                    Console.WriteLine($"Failed to start Tor. Remaining tries: {maxAttempts - i}. Exception: {ex} ");
+                    await Task.Delay(500, ct);
+                }
             }
         }
 
