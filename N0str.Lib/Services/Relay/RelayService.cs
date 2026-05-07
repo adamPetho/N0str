@@ -22,14 +22,30 @@ namespace N0str.Services.Relay
 
         public async Task ConnectAsync(IEnumerable<string> relayUrls, CancellationToken ct = default)
         {
+            const int maxAttempts = 3;
             var relayUris = relayUrls.Select(x => new Uri(x));
-            INostrClient nostrClient = NostrClientFactory.Create([.. relayUris], _torService.GetSocksEndpoint());
 
-            await nostrClient.ConnectAndWaitUntilConnected(ct);
+            for (int i = 1; i <= maxAttempts; i++) 
+            {
+                try
+                {
+                    INostrClient nostrClient = NostrClientFactory.Create([.. relayUris], _torService.GetSocksEndpoint());
+                    await nostrClient.ConnectAndWaitUntilConnected(ct);
 
-            _nostrClient = nostrClient;
-            NostrClient.EventsReceived += OnNostrEventsReceived;
-            NostrClient.EoseReceived += OnEoseReceived;
+                    _nostrClient = nostrClient;
+
+                    NostrClient.EventsReceived += OnNostrEventsReceived;
+                    NostrClient.EoseReceived += OnEoseReceived;
+
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed to connect to relays. Remaining tries: {maxAttempts - i}. Exception: {ex} ");
+                    await Task.Delay(500, ct);
+                }
+            }     
+            
         }
 
         private void OnNostrEventsReceived(object? sender, (string subscriptionId, NostrEvent[] events) e)
