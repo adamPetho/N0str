@@ -10,6 +10,7 @@ using N0str.Services.Tor;
 using N0str.ViewModels;
 using N0str.ViewModels.Pages;
 using N0str.Views.Pages;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Net.Sockets;
 using System.Net.WebSockets;
@@ -75,13 +76,35 @@ namespace N0str.Views
                 mainWindow.Show();
                 loadingWindow.Close();
             }
+            catch (WebSocketException)
+            {
+                if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
+                    vm.StatusMessage = "Could not connect to Nostr relays.";
+            }
+            catch (SocketException)
+            {
+                if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
+                    vm.StatusMessage = "Network connection failed.";
+            }
+            catch (Win32Exception)
+            {
+                if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
+                    vm.StatusMessage = "Tor executable could not be started.";
+            }
+            catch (TimeoutException)
+            {
+                if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
+                    vm.StatusMessage = "Tor startup timed out.";
+            }
+            catch (OperationCanceledException)
+            {
+                if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
+                    vm.StatusMessage = "Startup cancelled.";
+            }
             catch (Exception ex)
             {
-                if (desktop.MainWindow is LoadingWindow loading &&
-                    loading.DataContext is LoadingViewModel vm)
-                {
+                if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
                     vm.StatusMessage = $"Unexpected error: {ex}";
-                }
             }
         }
     }
