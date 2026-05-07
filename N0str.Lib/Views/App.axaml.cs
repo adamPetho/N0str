@@ -1,13 +1,18 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using N0str.Nostr;
 using N0str.Services;
-using N0str.Services.Events;
 using N0str.Services.Relay;
 using N0str.Services.Tor;
 using N0str.ViewModels;
+using N0str.ViewModels.Pages;
+using N0str.Views.Pages;
+using System.Diagnostics;
+using System.Net.Sockets;
+using System.Net.WebSockets;
 
 namespace N0str.Views
 {
@@ -20,42 +25,64 @@ namespace N0str.Views
 
         public override void OnFrameworkInitializationCompleted()
         {
-            // Register all the services needed for the application to run
-            var collection = new ServiceCollection();
-            collection.AddCommonServices();
-
-            // Creates a ServiceProvider containing services from the provided IServiceCollection
-            var services = collection.BuildServiceProvider();
-
-            var torService = services.GetRequiredService<ITorService>();
-
-            // TODO: Fix fire and forget
-            _ = torService.InitializeAsync();
-
-            var relayService = services.GetRequiredService<IRelayService>();
-            relayService.ConnectAsync(DefaultRelayURLs.URLs);
-
-            // Resolve EventService just to ensure it's constructed
-            services.GetRequiredService<IEventService>();
-
-            var vm = services.GetRequiredService<MainViewModel>();
-
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow
-                {
-                    DataContext = vm
-                };
-            }
-            else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
-            {
-                singleViewPlatform.MainView = new MainView
-                {
-                    DataContext = vm
-                };
+                InitializeAsync(desktop);
             }
 
             base.OnFrameworkInitializationCompleted();
+        }
+
+        private async void InitializeAsync(IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            try
+            {
+                var collection = new ServiceCollection();
+                collection.AddCommonServices();
+
+                var services = collection.BuildServiceProvider();
+
+                var loadingVm = new LoadingViewModel();
+                var loadingWindow = new LoadingWindow
+                {
+                    DataContext = loadingVm
+                };
+
+                desktop.MainWindow = loadingWindow;
+
+                loadingWindow.Show();
+
+                loadingVm.StatusMessage = "Starting Tor...";
+
+                var torService = services.GetRequiredService<ITorService>();
+                await torService.InitializeAsync();
+
+                loadingVm.StatusMessage = "Connecting to relays...";
+
+                var relayService = services.GetRequiredService<IRelayService>();
+                await relayService.ConnectAsync(DefaultRelayURLs.URLs);
+
+                loadingVm.StatusMessage = "Launching UI...";
+
+                var mainVM = services.GetRequiredService<MainViewModel>();
+                var mainWindow = new MainWindow
+                {
+                    DataContext = mainVM
+                };
+
+                desktop.MainWindow = mainWindow;
+
+                mainWindow.Show();
+                loadingWindow.Close();
+            }
+            catch (Exception ex)
+            {
+                if (desktop.MainWindow is LoadingWindow loading &&
+                    loading.DataContext is LoadingViewModel vm)
+                {
+                    vm.StatusMessage = $"Unexpected error: {ex}";
+                }
+            }
         }
     }
 }
