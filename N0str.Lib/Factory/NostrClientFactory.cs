@@ -8,14 +8,19 @@ namespace N0str.Factory
     {
         public static INostrClient Create(Uri[] relays, EndPoint? torEndpoint = null)
         {
-            var webProxy = torEndpoint switch
+            WebProxy? webProxy = CreateProxy(torEndpoint);
+            return Create(relays, webProxy);
+        }
+
+        public static WebProxy? CreateProxy(EndPoint? torEndpoint)
+        {
+            return torEndpoint switch
             {
                 IPEndPoint endpoint => new WebProxy($"socks5://{endpoint.Address}:{endpoint.Port}"),
                 DnsEndPoint endpoint => new WebProxy($"socks5://{endpoint.Host}:{endpoint.Port}"),
                 null => null,
                 _ => throw new ArgumentException("Endpoint type is not supported.")
             };
-            return Create(relays, webProxy);
         }
 
         public static INostrClient Create(Uri[] relays, WebProxy? proxy)
