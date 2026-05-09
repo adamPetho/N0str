@@ -9,15 +9,17 @@ namespace N0str.Services.Relay
     public class RelayService : IRelayService, IDisposable
     {
         private readonly ITorService _torService;
+        private readonly INostrClientFactory _nostrClientFactory;
         private INostrClient? _nostrClient;
         private INostrClient NostrClient => _nostrClient ?? throw new InvalidOperationException("NostrClient is null. Not connected to relays.");
 
         public event Action<(string, NostrEvent)>? EventReceived;
         public event Action<string>? EoseReceived;
 
-        public RelayService(ITorService torService)
+        public RelayService(ITorService torService, INostrClientFactory nostrClientFactory)
         {
             _torService = torService;
+            _nostrClientFactory = nostrClientFactory;
         }
 
         public async Task ConnectAsync(IEnumerable<string> relayUrls, CancellationToken ct = default)
@@ -29,7 +31,7 @@ namespace N0str.Services.Relay
             {
                 try
                 {
-                    INostrClient nostrClient = NostrClientFactory.Create([.. relayUris], _torService.GetSocksEndpoint());
+                    INostrClient nostrClient = _nostrClientFactory.Create([.. relayUris], _torService.GetSocksEndpoint());
                     await nostrClient.ConnectAndWaitUntilConnected(ct);
 
                     _nostrClient = nostrClient;
