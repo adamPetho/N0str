@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using N0str.Factory;
 using N0str.Nostr;
 using N0str.Services.Events;
 using N0str.Services.Relay;
@@ -17,6 +18,7 @@ namespace N0str.Services
             collection.AddSingleton<IEventService, EventService>();
             collection.AddSingleton<IN0strClient, N0strClient>();
             collection.AddSingleton<INavigation, NavigationService>();
+            collection.AddSingleton<INostrClientFactory, NostrClientFactory>();
 
             // ViewModels
             collection.AddTransient<MainViewModel>();
