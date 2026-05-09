@@ -16,8 +16,9 @@ namespace N0str.Tests.UnitTests
         public void Create_ShouldThrow_WhenNoRelaysProvided()
         {
             Uri[] relays = [];
+            var nostrClientFactory = new NostrClientFactory();
 
-            Action act = () => NostrClientFactory.Create(relays);
+            Action act = () => nostrClientFactory.Create(relays);
 
             var exception = Assert.Throws<ArgumentException>(act);
             Assert.Contains("At least one relay is required.", exception.Message);
@@ -31,7 +32,10 @@ namespace N0str.Tests.UnitTests
                 new Uri("wss://relay.damus.io")
             ];
 
-            var client = NostrClientFactory.Create(relays);
+            var nostrClientFactory = new NostrClientFactory();
+
+
+            var client = nostrClientFactory.Create(relays);
 
             Assert.IsType<NostrClient>(client);
         }
@@ -40,7 +44,9 @@ namespace N0str.Tests.UnitTests
         public void Create_ShouldReturnCompositeNostrClient_WhenMultipleRelaysProvided()
         {
             Uri[] uris = DefaultRelayURLs.URLs.Select(x => new Uri(x)).ToArray();
-            var client = NostrClientFactory.Create(uris);
+            var nostrClientFactory = new NostrClientFactory();
+
+            var client = nostrClientFactory.Create(uris);
 
             Assert.IsType<CompositeNostrClient>(client);
         }
@@ -53,9 +59,11 @@ namespace N0str.Tests.UnitTests
                 new Uri("wss://relay.damus.io")
             ];
 
+            var nostrClientFactory = new NostrClientFactory();
+
             var endpoint = new FakeEndpoint();
 
-            Action act = () => NostrClientFactory.Create(relays, endpoint);
+            Action act = () => nostrClientFactory.Create(relays, endpoint);
 
             var exception = Assert.Throws<ArgumentException>(act);
             Assert.Contains("Endpoint type is not supported", exception.Message);
@@ -66,7 +74,9 @@ namespace N0str.Tests.UnitTests
         {
             var endpoint = new IPEndPoint(IPAddress.Loopback, 9050);
 
-            var proxy = NostrClientFactory.CreateProxy(endpoint);
+            var nostrClientFactory = new NostrClientFactory();
+
+            var proxy = nostrClientFactory.CreateProxy(endpoint);
 
             Assert.NotNull(proxy);
             Assert.Contains("9050", proxy.GetProxy(new Uri("http://example.com"))!.ToString());
