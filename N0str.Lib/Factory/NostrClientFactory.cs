@@ -4,15 +4,15 @@ using System.Net.WebSockets;
 
 namespace N0str.Factory
 {
-    public static class NostrClientFactory
+    public class NostrClientFactory : INostrClientFactory
     {
-        public static INostrClient Create(Uri[] relays, EndPoint? torEndpoint = null)
+        public INostrClient Create(Uri[] relays, EndPoint? torEndpoint = null)
         {
             WebProxy? webProxy = CreateProxy(torEndpoint);
             return Create(relays, webProxy);
         }
 
-        public static WebProxy? CreateProxy(EndPoint? torEndpoint)
+        public WebProxy? CreateProxy(EndPoint? torEndpoint)
         {
             return torEndpoint switch
             {
@@ -23,7 +23,7 @@ namespace N0str.Factory
             };
         }
 
-        public static INostrClient Create(Uri[] relays, WebProxy? proxy)
+        public INostrClient Create(Uri[] relays, WebProxy? proxy)
         {
             return relays.Length switch
             {
