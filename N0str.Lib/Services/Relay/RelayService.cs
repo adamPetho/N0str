@@ -44,7 +44,14 @@ namespace N0str.Services.Relay
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Failed to connect to relays. Remaining tries: {maxAttempts - i}. Exception: {ex} ");
-                    await Task.Delay(500, ct);
+                    if (i < maxAttempts)
+                    {
+                        await Task.Delay(500, ct);
+                    }
+                    else
+                    {
+                        throw new RelayConnectionException("Failed to connect to relays 3 times in a row. Aborting.");
+                    }
                 }
             }     
             
