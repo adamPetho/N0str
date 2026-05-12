@@ -1,7 +1,7 @@
 ﻿namespace N0str.Services.Relay
 {
     [Serializable]
-    internal class RelayConnectionException : Exception
+    public class RelayConnectionException : Exception
     {
         public RelayConnectionException()
         {

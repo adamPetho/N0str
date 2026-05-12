@@ -31,7 +31,7 @@ namespace N0str.Tests.UnitTests
                 .ThrowsAsync(new WebSocketException())
                 .Returns(Task.CompletedTask);
 
-            // Mock successfull event publishing
+            // Mock successful event publishing
             mockedNostrClient
                 .Setup(x => x.PublishEvent(
                     It.IsAny<NostrEvent>(),
@@ -66,6 +66,31 @@ namespace N0str.Tests.UnitTests
                 Times.Exactly(3));
 
             Assert.True(eventForwarded);
+        }
+
+        [Fact]
+        public async Task Throw_If_All_Retries_Falls()
+        {
+            // Mock the Nostr Client to fail 3 times.
+            var mockedNostrClient = new Mock<INostrClient>();
+            mockedNostrClient.SetupSequence(x => x.ConnectAndWaitUntilConnected(It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new WebSocketException())
+                .ThrowsAsync(new WebSocketException())
+                .ThrowsAsync(new WebSocketException());
+
+            mockedNostrClient
+                .Setup(x => x.PublishEvent(
+                    It.IsAny<NostrEvent>(),
+                    It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            _nostrClientFactory.Setup(x => x.Create(It.IsAny<Uri[]>(), It.IsAny<EndPoint?>())).Returns(mockedNostrClient.Object);
+
+            await Assert.ThrowsAsync<RelayConnectionException>(() => _relayService.ConnectAsync(["wss://relay.primal.net", "wss://nos.lol", "wss://relay.damus.io"]));
+
+            mockedNostrClient.Verify(
+                x => x.ConnectAndWaitUntilConnected(It.IsAny<CancellationToken>()),
+                Times.Exactly(3));
         }
     }
 }
