@@ -65,7 +65,7 @@ namespace N0str.ViewModels.Pages
                 if (Events.Any(e => e.Id == ev.Id))
                     return;
 
-                Events.Insert(0, ev);
+                InsertSorted(ev);
             }
         }
 
@@ -75,8 +75,21 @@ namespace N0str.ViewModels.Pages
             if (Events.Any(e => e.Id == ev.Id))
                 return;
 
-            Events.Insert(0, ev);
+            InsertSorted(ev);
 
+        }
+
+        private void InsertSorted(NostrEvent ev)
+        {
+            int index = 0;
+
+            while (index < Events.Count &&
+                   Events[index].CreatedAt > ev.CreatedAt)
+            {
+                index++;
+            }
+
+            Events.Insert(index, ev);
         }
 
         private void OnEOSEReceived(string subscriptionId)
