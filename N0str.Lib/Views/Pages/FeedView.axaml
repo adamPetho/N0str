@@ -135,6 +135,7 @@
                            LineHeight="22"/>
 
                 <!-- Tags -->
+               <WrapPanel>
                 <ItemsControl ItemsSource="{Binding Tags}"
                               IsVisible="{Binding Tags.Count, Converter={x:Static ObjectConverters.IsNotNull}}">
                   <ItemsControl.ItemsPanel>
@@ -161,6 +162,7 @@
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>
                 </ItemsControl>
+               </WrapPanel>
 
               </StackPanel>
             </Border>
