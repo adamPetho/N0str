@@ -5,7 +5,9 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="clr-namespace:N0str.ViewModels.Pages"
              x:DataType="vm:PubKeyToFetchViewModel"
-             x:Class="N0str.Views.Pages.PubKeyToFetchView">
+             x:Class="N0str.Views.Pages.PubKeyToFetchView"
+             MinHeight="200"
+             MinWidth="400">
   <UserControl.Styles>
     <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
       <Setter Property="BorderBrush" Value="#7B68EE44"/>
