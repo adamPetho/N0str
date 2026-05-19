@@ -132,7 +132,11 @@
                            FontWeight="Light"
                            Foreground="#D0D0D0"
                            TextWrapping="Wrap"
-                           LineHeight="22"/>
+                           HorizontalAlignment="Left"
+                           TextAlignment="Left"
+                           LineHeight="22"
+                           MinWidth="500"
+                           MaxWidth="900"/>
 
                 <!-- Tags -->
                <WrapPanel>
