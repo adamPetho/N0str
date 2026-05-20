@@ -4,6 +4,7 @@ using N0str.Nostr;
 using N0str.Services.Events;
 using N0str.Services.Relay;
 using N0str.Services.Tor;
+using N0str.Services.Tor.Settings;
 using N0str.ViewModels;
 using N0str.ViewModels.Pages;
 
@@ -19,6 +20,7 @@ namespace N0str.Services
             collection.AddSingleton<IN0strClient, N0strClient>();
             collection.AddSingleton<INavigation, NavigationService>();
             collection.AddSingleton<INostrClientFactory, NostrClientFactory>();
+            collection.AddSingleton<ITorSettings, CustomTorSettings>();
 
             // ViewModels
             collection.AddTransient<MainViewModel>();
