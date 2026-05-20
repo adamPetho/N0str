@@ -2,7 +2,9 @@
 using N0str.Factory;
 using N0str.Services.Relay;
 using N0str.Services.Tor;
+using N0str.Services.Tor.Settings;
 using NNostr.Client;
+using OnionSharp.Tor;
 using System.Net;
 using System.Net.WebSockets;
 
@@ -11,14 +13,16 @@ namespace N0str.Tests.UnitTests
     public class RelayServiceTests
     {
         private readonly Mock<ITorService> _torServiceMock;
+        private readonly Mock<ITorSettings> _torSettings;
         private readonly Mock<INostrClientFactory> _nostrClientFactory;
         private readonly RelayService _relayService;
 
         public RelayServiceTests()
         {
             _torServiceMock = new Mock<ITorService>();
+            _torSettings = new Mock<ITorSettings>();
             _nostrClientFactory = new Mock<INostrClientFactory>();
-            _relayService = new RelayService(_torServiceMock.Object, _nostrClientFactory.Object);
+            _relayService = new RelayService(_torServiceMock.Object, _torSettings.Object, _nostrClientFactory.Object);
         }
 
         [Fact]
