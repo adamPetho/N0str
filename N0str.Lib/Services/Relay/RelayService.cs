@@ -1,6 +1,7 @@
 ﻿using N0str.Factory;
 using N0str.Services.Events;
 using N0str.Services.Tor;
+using N0str.Services.Tor.Settings;
 using NNostr.Client;
 using NNostr.Client.Protocols;
 
@@ -9,6 +10,7 @@ namespace N0str.Services.Relay
     public class RelayService : IRelayService, IDisposable
     {
         private readonly ITorService _torService;
+        private readonly ITorSettings _torSettings;
         private readonly INostrClientFactory _nostrClientFactory;
         private INostrClient? _nostrClient;
         private INostrClient NostrClient => _nostrClient ?? throw new InvalidOperationException("NostrClient is null. Not connected to relays.");
@@ -16,9 +18,10 @@ namespace N0str.Services.Relay
         public event Action<(string, NostrEvent)>? EventReceived;
         public event Action<string>? EoseReceived;
 
-        public RelayService(ITorService torService, INostrClientFactory nostrClientFactory)
+        public RelayService(ITorService torService, ITorSettings torSettings, INostrClientFactory nostrClientFactory)
         {
             _torService = torService;
+            _torSettings = torSettings;
             _nostrClientFactory = nostrClientFactory;
         }
 
@@ -31,7 +34,7 @@ namespace N0str.Services.Relay
             {
                 try
                 {
-                    INostrClient nostrClient = _nostrClientFactory.Create([.. relayUris], _torService.GetSocksEndpoint());
+                    INostrClient nostrClient = _nostrClientFactory.Create([.. relayUris], _torSettings.GetSocksEndpoint());
                     await nostrClient.ConnectAndWaitUntilConnected(ct);
 
                     _nostrClient = nostrClient;
