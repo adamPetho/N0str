@@ -6,7 +6,7 @@ namespace N0str.Services.Tor.Settings
 {
     public class CustomTorSettings : ITorSettings
     {
-        public TorSettings _torSettings = new(
+        private TorSettings _torSettings = new(
             EnvironmentHelpers.GetDataDir("N0str"),
             EnvironmentHelpers.GetFullBaseDirectory(),
             terminateOnExit: true,
