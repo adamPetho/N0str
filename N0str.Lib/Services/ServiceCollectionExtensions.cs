@@ -2,6 +2,7 @@
 using N0str.Factory;
 using N0str.Nostr;
 using N0str.Services.Events;
+using N0str.Services.Media;
 using N0str.Services.Relay;
 using N0str.Services.Tor;
 using N0str.Services.Tor.Settings;
@@ -21,6 +22,7 @@ namespace N0str.Services
             collection.AddSingleton<INavigation, NavigationService>();
             collection.AddSingleton<INostrClientFactory, NostrClientFactory>();
             collection.AddSingleton<ITorSettings, CustomTorSettings>();
+            collection.AddSingleton<MediaPipelineChannel>();
 
             // ViewModels
             collection.AddTransient<MainViewModel>();
