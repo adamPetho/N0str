@@ -48,17 +48,23 @@
                    Margin="0,2,0,0"/>
       </StackPanel>
 
-      <!-- Live indicator -->
+      <!-- Add new Sub button -->
       <StackPanel Grid.Column="2"
                   Orientation="Horizontal"
                   Spacing="6"
                   VerticalAlignment="Center"
                   IsVisible="{Binding !IsLoading}">
-        <Ellipse Width="6" Height="6" Fill="#4CAF50"/>
-        <TextBlock Text="LIVE"
-                   FontSize="11"
-                   Foreground="#4CAF50"
-                   VerticalAlignment="Center"/>
+        <Button Command="{Binding AddNewSubCommand}"
+                Content="Add new Sub"
+                Background="#F2F2F2"
+                BorderBrush="#2A2A2A"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="14,7"
+                FontSize="13"
+                Foreground="#888888"
+                VerticalAlignment="Center">
+        </Button>
       </StackPanel>
     </Grid>
 
