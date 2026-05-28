@@ -36,16 +36,12 @@
         </StackPanel>
       </Button>
 
-      <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
+      <StackPanel Grid.Column="1" Margin="14,3,0,0" VerticalAlignment="Center">
         <TextBlock Text="Event Feed"
                    FontSize="20"
                    FontWeight="SemiBold"
                    Foreground="#F2F2F2"
                    LetterSpacing="-0.3"/>
-        <TextBlock Text="{Binding Pubkey}"
-                   FontSize="11"
-                   Foreground="#555555"
-                   Margin="0,2,0,0"/>
       </StackPanel>
 
       <!-- Add new Sub button -->
