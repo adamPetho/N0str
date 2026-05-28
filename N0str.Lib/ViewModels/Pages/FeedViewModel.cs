@@ -48,6 +48,12 @@ namespace N0str.ViewModels.Pages
             _eventService.RelevantEventReceived += OnEventReceived;
             _eventService.EoseReceived += OnEOSEReceived;
 
+            await SubscribeToPubkey(pubkey);
+            LoadExistingEventsFromMemory(pubkey);
+        }
+
+        private async Task SubscribeToPubkey(string pubkey)
+        {
             try
             {
                 await _nostrClient.SubscribeToPubkey(pubkey);
@@ -56,14 +62,19 @@ namespace N0str.ViewModels.Pages
             {
                 Console.WriteLine(ex);
             }
+        }
 
+        private void LoadExistingEventsFromMemory(string pubkey)
+        {
             // Load whatever we already have (empty at first)
             var existing = _nostrClient.FetchAllByAuthor(pubkey);
 
             foreach (var ev in existing.OrderByDescending(e => e.CreatedAt))
             {
                 if (Events.Any(e => e.Id == ev.Id))
+                {
                     return;
+                }
 
                 InsertSorted(ev);
             }
