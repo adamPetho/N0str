@@ -67,7 +67,7 @@ namespace N0str.ViewModels.Pages
         private void LoadExistingEventsFromMemory(string pubkey)
         {
             // Load whatever we already have (empty at first)
-            var existing = _nostrClient.FetchAllByAuthor(pubkey);
+            var existing = _nostrClient.FetchAllByAuthorFromMemory(pubkey);
 
             foreach (var ev in existing.OrderByDescending(e => e.CreatedAt))
             {

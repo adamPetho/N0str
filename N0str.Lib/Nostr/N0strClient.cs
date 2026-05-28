@@ -58,7 +58,7 @@ namespace N0str.Nostr
             await _relayService.PublishEventAsync(ev, ct);
         }
 
-        public IEnumerable<NostrEvent> FetchAllByAuthor(string pubkey)
+        public IEnumerable<NostrEvent> FetchAllByAuthorFromMemory(string pubkey)
         {
             return _eventService.GetEventsByAuthor(pubkey);
         }
