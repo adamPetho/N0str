@@ -1,0 +1,88 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="clr-namespace:N0str.ViewModels.Pages.Model"
+             x:DataType="vm:EventViewModel"
+             x:Class="N0str.Views.Pages.Model.EventView">
+
+     <UserControl.Styles>
+        <!-- Event card hover -->
+        <Style Selector="Border.event-card:pointerover">
+          <Setter Property="BorderBrush" Value="#333333"/>
+        </Style>
+     </UserControl.Styles>
+
+ <Border Classes="event-card"
+                    Background="#1C1C1C"
+                    BorderBrush="#252525"
+                    BorderThickness="1"
+                    CornerRadius="12"
+                    Padding="18,16"
+                    Margin="0,0,0,10">
+              <StackPanel Spacing="12">
+
+                <!-- Meta row: kind + timestamp -->
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                  <Border Grid.Column="0"
+                          Background="#252525"
+                          BorderBrush="#2E2E2E"
+                          BorderThickness="1"
+                          CornerRadius="20"
+                          Padding="10,3">
+                    <TextBlock Text="{Binding Kind, StringFormat='kind:\{0\}'}"
+                               FontSize="10"
+                               Foreground="#7B68EE"/>
+                  </Border>
+                  <TextBlock Grid.Column="2"
+                             Text="{Binding CreatedAt, StringFormat='\{0:yyyy-MM-dd · HH:mm\}'}"
+                             FontSize="11"
+                             Foreground="#444444"
+                             VerticalAlignment="Center"/>
+                </Grid>
+
+                <!-- Content -->
+                <TextBlock Text="{Binding Content}"
+                           FontSize="14"
+                           FontWeight="Light"
+                           Foreground="#D0D0D0"
+                           TextWrapping="Wrap"
+                           HorizontalAlignment="Left"
+                           TextAlignment="Left"
+                           LineHeight="22"
+                           MinWidth="500"
+                           MaxWidth="900"/>
+
+                <!-- Tags -->
+               <WrapPanel>
+                <ItemsControl ItemsSource="{Binding Tags}"
+                              IsVisible="{Binding Tags.Count, Converter={x:Static ObjectConverters.IsNotNull}}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <Border Background="#1A1A2E"
+                              BorderBrush="#2A2A4A"
+                              BorderThickness="1"
+                              CornerRadius="6"
+                              Padding="9,3"
+                              Margin="0,0,6,6">
+                        <TextBlock FontSize="11"
+                                   Foreground="#7B68EEaa">
+                          <Run Text="#" Foreground="#555555"/>
+                          <Run Text="{Binding TagIdentifier}"/>
+                          <Run Text=" · " Foreground="#333333"/>
+                          <Run Text="{Binding Data[0], FallbackValue=''}" Foreground="#7B68EE88"/>
+                        </TextBlock>
+                    </Border>
+                    </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                   </WrapPanel>
+                  </StackPanel>
+     </Border>
+</UserControl>
