@@ -1,6 +1,7 @@
 ﻿using N0str.Nostr;
 using N0str.Services;
 using N0str.Services.Events;
+using N0str.ViewModels.Pages.Model;
 using NNostr.Client;
 using ReactiveUI;
 using System.Collections.ObjectModel;
@@ -16,7 +17,7 @@ namespace N0str.ViewModels.Pages
         private readonly IEventService _eventService;
         private List<string> _pubkeys;
 
-        public ObservableCollection<NostrEvent> Events { get; } = new();
+        public ObservableCollection<EventViewModel> Events { get; } = new();
 
         private bool _isLoading = true;
         public bool IsLoading
@@ -87,7 +88,7 @@ namespace N0str.ViewModels.Pages
 
             foreach (var ev in existing.OrderByDescending(e => e.CreatedAt))
             {
-                if (Events.Any(e => e.Id == ev.Id))
+                if (Events.Any(e => e.ID == ev.Id))
                 {
                     return;
                 }
@@ -99,7 +100,7 @@ namespace N0str.ViewModels.Pages
         private void OnEventReceived(NostrEvent ev)
         {
             // Prevent duplicates in UI
-            if (Events.Any(e => e.Id == ev.Id))
+            if (Events.Any(e => e.ID == ev.Id))
                 return;
 
             InsertSorted(ev);
@@ -116,7 +117,7 @@ namespace N0str.ViewModels.Pages
                 index++;
             }
 
-            Events.Insert(index, ev);
+            Events.Insert(index, new(ev));
         }
 
         private void OnEOSEReceived(string subscriptionId)
