@@ -1,7 +1,9 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:N0str.ViewModels.Pages"
+             xmlns:model="clr-namespace:N0str.ViewModels.Pages.Model"
              xmlns:views="clr-namespace:N0str.Views.Pages"
+             xmlns:modelViews="clr-namespace:N0str.Views.Pages.Model"
              xmlns:converters="clr-namespace:N0str.Converter"
              x:Class="N0str.Views.App"
              RequestedThemeVariant="Default">
@@ -32,6 +34,9 @@
         </DataTemplate>
         <DataTemplate DataType="vm:FeedViewModel">
 			<views:FeedView/>
+        </DataTemplate>
+        <DataTemplate DataType="model:EventViewModel">
+            <modelViews:EventView />
         </DataTemplate>
     </Application.DataTemplates>
 
