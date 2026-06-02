@@ -1,4 +1,6 @@
-﻿namespace N0str.Services.Media
+﻿using N0str.Models;
+
+namespace N0str.Services.Media
 {
     public class MediaPipelineService : IMediaPipelineService
     {
@@ -16,9 +18,9 @@
             _readerThread = Task.Run(async () => ReadChannelLoop(_cts.Token));
         }
 
-        public async Task EnqueueURL(string url)
+        public async Task EnqueueURL(MediaRequest request)
         {
-            await _mediaChannel.EnqueueLink(url);
+            await _mediaChannel.EnqueueLink(request);
         }
 
         public async Task ReadChannelLoop(CancellationToken ct)
@@ -27,7 +29,7 @@
             {
                 try
                 {
-                    var imageBytes = await _mediaFetcherService.FetchImageBytesFromUrl(request);
+                    var imageBytes = await _mediaFetcherService.FetchImageBytesFromUrl(request.RequestURL);
                     // decode bitmap
                     // update VM, raise Event?
                 }

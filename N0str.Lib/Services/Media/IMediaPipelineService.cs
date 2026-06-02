@@ -1,4 +1,5 @@
-﻿using System;
+﻿using N0str.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace N0str.Services.Media
 {
     public interface IMediaPipelineService
     {
-        Task EnqueueURL(string url);
+        Task EnqueueURL(MediaRequest url);
 
         Task ReadChannelLoop(CancellationToken ct);
     }
