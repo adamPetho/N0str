@@ -93,7 +93,7 @@ namespace N0str.ViewModels.Pages
                     return;
                 }
 
-                InsertSorted(ev);
+                InsertSorted(new(ev));
             }
         }
 
@@ -103,11 +103,13 @@ namespace N0str.ViewModels.Pages
             if (Events.Any(e => e.ID == ev.Id))
                 return;
 
-            InsertSorted(ev);
+            var eventVM = new EventViewModel(ev);
+
+            InsertSorted(eventVM);
 
         }
 
-        private void InsertSorted(NostrEvent ev)
+        private void InsertSorted(EventViewModel ev)
         {
             int index = 0;
 
@@ -116,8 +118,8 @@ namespace N0str.ViewModels.Pages
             {
                 index++;
             }
-
-            Events.Insert(index, new(ev));
+            
+            Events.Insert(index, ev);
         }
 
         private void OnEOSEReceived(string subscriptionId)
