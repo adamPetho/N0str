@@ -2,5 +2,5 @@
 
 namespace N0str.Models
 {
-    public record MediaRequest(string RequestURL, EventViewModel ViewModel);
+    public record MediaRequest(IReadOnlyCollection<string> ImageURLs, EventViewModel ViewModel);
 }
