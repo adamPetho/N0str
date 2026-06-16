@@ -43,7 +43,7 @@
                 </Grid>
 
                 <!-- Content -->
-                <TextBlock Text="{Binding Content}"
+                <TextBlock Text="{Binding DisplayContent}"
                            FontSize="14"
                            FontWeight="Light"
                            Foreground="#D0D0D0"
@@ -53,6 +53,30 @@
                            LineHeight="22"
                            MinWidth="500"
                            MaxWidth="900"/>
+
+                  <!-- Images -->
+                    <ItemsControl ItemsSource="{Binding Images}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#151515"
+                                        BorderBrush="#252525"
+                                        BorderThickness="1"
+                                        CornerRadius="8"
+                                        Margin="0,4,0,4">
+
+                                    <Image Source="{Binding}"
+                                           MaxWidth="1000"
+                                           Stretch="Uniform"/>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
 
                 <!-- Tags -->
                <WrapPanel>
