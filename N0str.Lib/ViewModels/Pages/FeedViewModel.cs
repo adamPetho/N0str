@@ -1,6 +1,11 @@
-﻿using N0str.Nostr;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using N0str.Models;
+using N0str.Nostr;
 using N0str.Services;
 using N0str.Services.Events;
+using N0str.Services.Media;
+using N0str.Static;
 using N0str.ViewModels.Pages.Model;
 using NNostr.Client;
 using ReactiveUI;
@@ -15,6 +20,7 @@ namespace N0str.ViewModels.Pages
         private readonly IServiceProvider _serviceProvider;
         private readonly IN0strClient _nostrClient;
         private readonly IEventService _eventService;
+        private readonly IMediaPipelineService _mediaPipelineService;
         private List<string> _pubkeys;
 
         public ObservableCollection<EventViewModel> Events { get; } = new();
@@ -38,6 +44,7 @@ namespace N0str.ViewModels.Pages
             _serviceProvider = serviceProvider;
             _nostrClient = nostrClient;
             _eventService = eventService;
+            _mediaPipelineService = _serviceProvider.GetRequiredService<IMediaPipelineService>();
 
             _pubkeys = new();
 
@@ -93,7 +100,15 @@ namespace N0str.ViewModels.Pages
                     return;
                 }
 
-                InsertSorted(new(ev));
+                var eventVM = new EventViewModel(ev);
+
+                if (MediaExtractor.TryGetImageUrls(ev, out IReadOnlyList<string> imageLinks))
+                {
+                    var mediaRequst = new MediaRequest(imageLinks, eventVM);
+                   _mediaPipelineService.EnqueueURL(mediaRequst);
+                }
+
+                InsertSorted(eventVM);
             }
         }
 
@@ -104,6 +119,12 @@ namespace N0str.ViewModels.Pages
                 return;
 
             var eventVM = new EventViewModel(ev);
+
+            if (MediaExtractor.TryGetImageUrls(ev, out IReadOnlyList<string> imageLinks))
+            {
+                var mediaRequst = new MediaRequest(imageLinks, eventVM);
+                _mediaPipelineService.EnqueueURL(mediaRequst);
+            }
 
             InsertSorted(eventVM);
 

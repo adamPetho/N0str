@@ -23,6 +23,8 @@ namespace N0str.Services
             collection.AddSingleton<INostrClientFactory, NostrClientFactory>();
             collection.AddSingleton<ITorSettings, CustomTorSettings>();
             collection.AddSingleton<MediaPipelineChannel>();
+            collection.AddSingleton<IMediaService, MediaService>();
+            collection.AddSingleton<IMediaPipelineService, MediaPipelineService>();
 
             // ViewModels
             collection.AddTransient<MainViewModel>();
