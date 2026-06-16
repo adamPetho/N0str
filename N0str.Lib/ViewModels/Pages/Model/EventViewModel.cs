@@ -1,8 +1,11 @@
 ﻿using Avalonia.Media.Imaging;
+using Avalonia.Threading;
+using N0str.Static;
 using NNostr.Client;
 using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Reactive;
+using System.Runtime.CompilerServices;
 
 
 namespace N0str.ViewModels.Pages.Model
@@ -11,6 +14,7 @@ namespace N0str.ViewModels.Pages.Model
     {
         public string ID { get; }
         public string? Content { get; }
+        public string? DisplayContent { get; }
 
         public string AuthorPubKey { get; }
 
@@ -33,6 +37,33 @@ namespace N0str.ViewModels.Pages.Model
             CreatedAt = ev.CreatedAt;
             Kind = ev.Kind;
             Tags = ev.Tags;
+
+            DisplayContent = Content;
+
+            if (DisplayContent is null)
+                return;
+
+            var imageURLs = MediaExtractor.ExtractImageUrls(ev);
+            foreach (var imageURL in imageURLs)
+            {
+                DisplayContent = DisplayContent.Replace(imageURL, "");
+            }
+        }
+
+        public async Task AddImageToEvent(byte[] imageBytes)
+        {
+            var bitmap = ConvertBytesToBitmap(imageBytes);
+
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                Images.Add(bitmap);
+            });
+        }
+
+        private Bitmap ConvertBytesToBitmap(byte[] bytes)
+        {
+            using var ms = new MemoryStream(bytes);
+            return new Bitmap(ms);
         }
     }
 }
