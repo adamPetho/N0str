@@ -29,9 +29,13 @@ namespace N0str.Services.Media
             {
                 try
                 {
-                    var imageBytes = await _mediaFetcherService.FetchImageBytesFromUrl(request.RequestURL);
-                    // decode bitmap
-                    // update VM, raise Event?
+                    foreach (var imgURL in request.ImageURLs) 
+                    {
+                        var imageBytes = await _mediaFetcherService.FetchImageBytesFromUrl(imgURL);
+
+                        // update VM, raise Event?
+                        await request.ViewModel.AddImageToEvent(imageBytes);
+                    }
                 }
                 catch (Exception ex)
                 {
