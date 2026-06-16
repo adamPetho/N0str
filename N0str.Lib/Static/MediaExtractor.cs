@@ -18,5 +18,16 @@ namespace N0str.Static
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList();
         }
+
+        public static bool TryGetImageUrls(NostrEvent nostrEvent, out IReadOnlyList<string> links)
+        {
+            links = ExtractImageUrls(nostrEvent);
+            if (links.Count > 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }
