@@ -1,4 +1,5 @@
-﻿using N0str.Services.Media;
+﻿using Avalonia.Media.Imaging;
+using N0str.Services.Media;
 using N0str.Services.Tor.Settings;
 using OnionSharp.Microservices;
 using OnionSharp.Tor;
@@ -13,8 +14,10 @@ namespace N0str.Tests.UnitTests
         {
             var customTorSettings = new CustomTorSettings();
 
+            CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(1));
+
             TorProcessManager torProcessManager = new TorProcessManager(customTorSettings.GetTorSettings());
-            await torProcessManager.StartAsync(attempts: 3, CancellationToken.None);
+            await torProcessManager.StartAsync(attempts: 3, cancellationTokenSource.Token);
 
             var mediaService = new MediaService(customTorSettings);
 
