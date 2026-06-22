@@ -34,7 +34,7 @@ namespace N0str.Services.Media
                         var imageBytes = await _mediaFetcherService.FetchImageBytesFromUrl(imgURL);
 
                         // update VM, raise Event?
-                        await request.ViewModel.AddImageToEvent(imageBytes);
+                        await request.ViewModel.AddImageToEvent(imgURL, imageBytes);
                     }
                 }
                 catch (Exception ex)
