@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="clr-namespace:N0str.ViewModels.Pages.Model"
+             x:DataType="vm:ImageViewModel"
+             x:Class="N0str.Views.Pages.Model.ImageView">
+  <Border CornerRadius="8"
+            BorderBrush="#252525"
+            BorderThickness="1"
+            ClipToBounds="True">
+
+        <Image Source="{Binding Bitmap}"
+               RenderOptions.BitmapInterpolationMode="HighQuality"
+               Stretch="Uniform"
+               MaxWidth="900"/>
+
+    </Border>
+</UserControl>
