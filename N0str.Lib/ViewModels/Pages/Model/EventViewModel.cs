@@ -23,7 +23,7 @@ namespace N0str.ViewModels.Pages.Model
         public int Kind { get; }
         public List<NostrEventTag> Tags { get; }
 
-        public ObservableCollection<Bitmap> Images { get; } = [];
+        public ObservableCollection<ImageViewModel> Images { get; } = [];
 
         public bool IsMediaLoading { get; set; }
 
@@ -50,13 +50,13 @@ namespace N0str.ViewModels.Pages.Model
             }
         }
 
-        public async Task AddImageToEvent(byte[] imageBytes)
+        public async Task AddImageToEvent(string imgURL, byte[] imageBytes)
         {
             var bitmap = ConvertBytesToBitmap(imageBytes);
 
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
-                Images.Add(bitmap);
+                Images.Add(new(imgURL, bitmap));
             });
         }
 
