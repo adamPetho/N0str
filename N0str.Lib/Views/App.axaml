@@ -38,6 +38,10 @@
         <DataTemplate DataType="model:EventViewModel">
             <modelViews:EventView />
         </DataTemplate>
+        <DataTemplate DataType="model:ImageViewModel">
+            <modelViews:ImageView />
+        </DataTemplate>
+
     </Application.DataTemplates>
 
     <Application.Resources>
