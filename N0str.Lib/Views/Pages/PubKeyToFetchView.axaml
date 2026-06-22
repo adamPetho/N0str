@@ -39,7 +39,7 @@
                  Margin="0,4,0,0"/>
     </StackPanel>
 
-    <!-- Private Key Input -->
+    <!-- Pub Key Input -->
     <StackPanel Spacing="8">
       <TextBlock Text="Public Key"
                  FontSize="11"
@@ -55,7 +55,8 @@
                CornerRadius="8"
                Padding="12,10"
                FontSize="13"
-               CaretBrush="#7B68EE"/>
+               CaretBrush="#7B68EE"
+               MinWidth="500"/>
 
         <!-- Error message -->
           <Border Background="#2D1A1A"
