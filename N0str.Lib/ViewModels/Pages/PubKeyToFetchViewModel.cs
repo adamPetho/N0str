@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using N0str.Nostr;
 using N0str.Services;
+using N0str.Static;
 using NBitcoin;
 using NNostr.Client;
 using ReactiveUI;
@@ -26,7 +27,7 @@ namespace N0str.ViewModels.Pages
 
             var canConfirm = this.WhenAnyValue(
                 x => x.PublicKey,
-                key => !string.IsNullOrWhiteSpace(key));
+                key => !string.IsNullOrWhiteSpace(key) && Checkers.IsValidProfileIdentifier(key));
 
             NavigateToFeedCommand = ReactiveCommand.CreateFromTask(NavigateToFeed, canConfirm);
         }
