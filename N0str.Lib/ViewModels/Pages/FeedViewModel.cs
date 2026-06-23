@@ -21,7 +21,7 @@ namespace N0str.ViewModels.Pages
         private readonly IN0strClient _nostrClient;
         private readonly IEventService _eventService;
         private readonly IMediaPipelineService _mediaPipelineService;
-        private List<string> _pubkeys;
+        private HashSet<string> _pubkeys;
 
         public ObservableCollection<EventViewModel> Events { get; } = new();
 
@@ -32,7 +32,7 @@ namespace N0str.ViewModels.Pages
             private set => SetProperty(ref _isLoading, value);
         }
 
-        public List<string> Pubkeys
+        public HashSet<string> Pubkeys
         {
             get => _pubkeys;
             set => SetProperty(ref _pubkeys, value);
@@ -58,11 +58,17 @@ namespace N0str.ViewModels.Pages
         public ReactiveCommand<Unit, Unit> BackCommand { get; }
         public ReactiveCommand<Unit, Unit> AddNewSubCommand { get; }
 
-        public async Task InitializeAsync(string pubkey)
+        public async Task InitializeAsync(string userInput)
         {
-            Pubkeys.Add(pubkey);
+            if(!Checkers.TryExtractIdentifier(userInput, out string? pubkey) || pubkey is null)
+            {
+                throw new Exception("Converting npub or nprofile to pubkey failed.");
+            }
 
-            await SubscribeToPubkey(pubkey);
+            if (Pubkeys.Add(pubkey))
+            {
+                await SubscribeToPubkey(pubkey);
+            }
 
             foreach (var pubk in Pubkeys) 
             {
