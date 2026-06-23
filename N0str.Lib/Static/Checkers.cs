@@ -1,9 +1,12 @@
-﻿using NNostr.Client.Protocols;
+﻿using NNostr.Client;
+using NNostr.Client.Protocols;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static NNostr.Client.Protocols.NIP19;
 
 namespace N0str.Static
 {
@@ -34,6 +37,27 @@ namespace N0str.Static
             {
                 return false;
             }
+        }
+
+        public static bool TryExtractIdentifier(string input, [NotNullWhen(true)] out string? pubkeyHex)
+        {
+            pubkeyHex = "";
+            if (input.StartsWith("npub"))
+            {
+                pubkeyHex = NIP19.FromNIP19Npub(input).ToHex();
+                return true;
+            }
+
+            if (input.StartsWith("nprofile"))
+            {
+                if (NIP19.FromNIP19Note(input) is NosteProfileNote profile)
+                {
+                    pubkeyHex = profile.PubKey;
+                }
+                return true;
+            }
+
+            return false;
         }
     }
 }
