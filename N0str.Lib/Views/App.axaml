@@ -41,6 +41,9 @@
         <DataTemplate DataType="model:ImageViewModel">
             <modelViews:ImageView />
         </DataTemplate>
+        <DataTemplate DataType="model:EventReferenceViewModel">
+            <modelViews:EventReferenceView />
+        </DataTemplate>
 
     </Application.DataTemplates>
 
