@@ -31,12 +31,12 @@
                           BorderThickness="1"
                           CornerRadius="20"
                           Padding="10,3">
-                    <TextBlock Text="{Binding Kind, StringFormat='kind:\{0\}'}"
+                    <TextBlock Text="{Binding NostrEvent.Kind, StringFormat='kind:\{0\}'}"
                                FontSize="10"
                                Foreground="#7B68EE"/>
                   </Border>
                   <TextBlock Grid.Column="2"
-                             Text="{Binding CreatedAt, StringFormat='\{0:yyyy-MM-dd · HH:mm\}'}"
+                             Text="{Binding NostrEvent.CreatedAt, StringFormat='\{0:yyyy-MM-dd · HH:mm\}'}"
                              FontSize="11"
                              Foreground="#444444"
                              VerticalAlignment="Center"/>
@@ -65,8 +65,8 @@
 
                 <!-- Tags -->
                <WrapPanel>
-                <ItemsControl ItemsSource="{Binding Tags}"
-                              IsVisible="{Binding Tags.Count, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <ItemsControl ItemsSource="{Binding NostrEvent.Tags}"
+                              IsVisible="{Binding NostrEvent.Tags.Count, Converter={x:Static ObjectConverters.IsNotNull}}">
                   <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                       <WrapPanel Orientation="Horizontal"/>
@@ -86,6 +86,8 @@
                           <Run Text="{Binding TagIdentifier}"/>
                           <Run Text=" · " Foreground="#333333"/>
                           <Run Text="{Binding Data[0], FallbackValue=''}" Foreground="#7B68EE88"/>
+                            <Run Text=" · " Foreground="#333333"/>
+                          <Run Text="{Binding Data[2], FallbackValue=''}" Foreground="#7B68EE88"/>
                         </TextBlock>
                     </Border>
                     </DataTemplate>
