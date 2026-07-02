@@ -12,11 +12,8 @@ namespace N0str.ViewModels.Pages.Model
     {
         public NostrEvent NostrEvent { get; }
         public List<EventReference> References { get; }
-
-        // Third party root event replied to
-        public NostrEvent? RootEvent { get; }
-        // The Event the Pubkey replied to
-        public NostrEvent? ReplyEvent { get; }
+        public EventReferenceViewModel? ReferenceViewModel { get; }
+        public bool HasReferences => ReferenceViewModel != null;
         public string? DisplayContent { get; }
 
         public ObservableCollection<ImageViewModel> Images { get; } = [];
@@ -30,9 +27,7 @@ namespace N0str.ViewModels.Pages.Model
         {
             NostrEvent = ev.NostrEvent;
             References = ev.References;
-            RootEvent = ExtractRootEventIfExists(ev);
-            ReplyEvent = ExtractReplyEventIfExists(ev);
-            EventType = SetEventType();
+            ReferenceViewModel = BuildReferences(ev);
             DisplayContent = NostrEvent.Content;
 
             if (DisplayContent is null)
@@ -45,9 +40,26 @@ namespace N0str.ViewModels.Pages.Model
             }
         }
 
-        private EventType SetEventType()
+        private EventReferenceViewModel? BuildReferences(NostrEventWithReferences references)
         {
-            return RootEvent is not null ? EventType.Reply : EventType.Root;
+            var rootEvent = ExtractRootEventIfExists(references);
+            var replyEvent = ExtractReplyEventIfExists(references);
+
+            if (rootEvent is null && replyEvent is null)
+                return null;
+
+            // Start with the deepest link (Root)
+            EventReferenceViewModel? currentChain = rootEvent is not null
+                ? new EventReferenceViewModel(rootEvent.Content, null)
+                : null;
+
+            // If there is a reply event, wrap the root chain inside it
+            if (replyEvent is not null && rootEvent.Id != replyEvent.Id)
+            {
+                currentChain = new EventReferenceViewModel(replyEvent.Content, currentChain);
+            }
+
+            return currentChain;
         }
 
         private NostrEvent? ExtractRootEventIfExists(NostrEventWithReferences ev)
