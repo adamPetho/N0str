@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="clr-namespace:N0str.ViewModels.Pages.Model"
+             xmlns:views="clr-namespace:N0str.Views.Pages.Model"
              x:DataType="vm:EventViewModel"
              x:Class="N0str.Views.Pages.Model.EventView">
 
@@ -62,6 +63,16 @@
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
+
+                <StackPanel Spacing="4">
+                    <TextBlock
+                        Text="Replying to:"
+                        FontSize="11"
+                        Foreground="#666666"
+                        IsVisible="{Binding HasReferences}" />
+                  <!-- Reply and Root -->
+                  <ContentControl Content="{Binding ReferenceViewModel}" IsVisible="{Binding HasReferences}" />
+                 </StackPanel>
 
                 <!-- Tags -->
                <WrapPanel>
