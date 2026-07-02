@@ -7,6 +7,7 @@ namespace N0str.Services.Relay
         Task ConnectAsync(IEnumerable<string> relayUrls, CancellationToken ct = default);
         Task PublishEventAsync(NostrEvent nostrEvent, CancellationToken ct = default);
         Task CreateSubscriptionAsync(string pubkey, string subscriptionID, CancellationToken ct = default);
+        Task<List<NostrEvent>> FetchIndividualEventsAsync(string[] eventIds, CancellationToken ct = default);
 
         event Action<(string, NostrEvent)>? EventReceived;
         event Action<string>? EoseReceived;

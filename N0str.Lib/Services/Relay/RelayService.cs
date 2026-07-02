@@ -83,6 +83,12 @@ namespace N0str.Services.Relay
             await NostrClient.CreateSubscription(subscriptionID, [new() { Kinds = [1], Authors = [pubkey] }], ct);
         }
 
+        public async Task<List<NostrEvent>> FetchIndividualEventsAsync(string[] eventIds, CancellationToken ct = default)
+        {
+            var events = await NostrClient.FetchEvents([new() { Ids = eventIds }], ct);
+            return events;
+        }
+
         public void Dispose()
         {
             NostrClient.EventsReceived -= OnNostrEventsReceived;
