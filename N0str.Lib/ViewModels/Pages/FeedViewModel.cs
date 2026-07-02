@@ -99,16 +99,16 @@ namespace N0str.ViewModels.Pages
             // Load whatever we already have (empty at first)
             var existing = _nostrClient.FetchAllByAuthorFromMemory(pubkey);
 
-            foreach (var ev in existing.OrderByDescending(e => e.CreatedAt))
+            foreach (var ev in existing.OrderByDescending(e => e.NostrEvent.CreatedAt))
             {
-                if (Events.Any(e => e.ID == ev.Id))
+                if (Events.Any(e => e.NostrEvent.Id == ev.NostrEvent.Id))
                 {
                     return;
                 }
 
                 var eventVM = new EventViewModel(ev);
 
-                if (MediaExtractor.TryGetImageUrls(ev, out IReadOnlyList<string> imageLinks))
+                if (MediaExtractor.TryGetImageUrls(ev.NostrEvent, out IReadOnlyList<string> imageLinks))
                 {
                     var mediaRequst = new MediaRequest(imageLinks, eventVM);
                    _mediaPipelineService.EnqueueURL(mediaRequst);
@@ -118,15 +118,15 @@ namespace N0str.ViewModels.Pages
             }
         }
 
-        private void OnEventReceived(NostrEvent ev)
+        private void OnEventReceived(NostrEventWithReferences ev)
         {
             // Prevent duplicates in UI
-            if (Events.Any(e => e.ID == ev.Id))
+            if (Events.Any(item => item.NostrEvent.Id == ev.NostrEvent.Id))
                 return;
 
             var eventVM = new EventViewModel(ev);
 
-            if (MediaExtractor.TryGetImageUrls(ev, out IReadOnlyList<string> imageLinks))
+            if (MediaExtractor.TryGetImageUrls(ev.NostrEvent, out IReadOnlyList<string> imageLinks))
             {
                 var mediaRequst = new MediaRequest(imageLinks, eventVM);
                 _mediaPipelineService.EnqueueURL(mediaRequst);
@@ -141,7 +141,7 @@ namespace N0str.ViewModels.Pages
             int index = 0;
 
             while (index < Events.Count &&
-                   Events[index].CreatedAt > ev.CreatedAt)
+                   Events[index].NostrEvent.CreatedAt > ev.NostrEvent.CreatedAt)
             {
                 index++;
             }
