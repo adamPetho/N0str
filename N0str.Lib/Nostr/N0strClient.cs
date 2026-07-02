@@ -1,4 +1,5 @@
-﻿using N0str.Services.Events;
+﻿using N0str.Models;
+using N0str.Services.Events;
 using N0str.Services.Relay;
 using NBitcoin.Secp256k1;
 using NNostr.Client;
@@ -58,7 +59,7 @@ namespace N0str.Nostr
             await _relayService.PublishEventAsync(ev, ct);
         }
 
-        public IEnumerable<NostrEvent> FetchAllByAuthorFromMemory(string pubkey)
+        public IEnumerable<NostrEventWithReferences> FetchAllByAuthorFromMemory(string pubkey)
         {
             return _eventService.GetEventsByAuthor(pubkey);
         }

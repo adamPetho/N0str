@@ -1,4 +1,5 @@
-﻿using NNostr.Client;
+﻿using N0str.Models;
+using NNostr.Client;
 
 namespace N0str.Nostr
 {
@@ -8,6 +9,6 @@ namespace N0str.Nostr
         Task<NostrEvent> CreateNostrEvent(string content, int kind, List<(string TagIdentifier, string[] Data)> tags);
         Task PublishEventAsync(NostrEvent ev, CancellationToken ct = default);
         Task SubscribeToPubkey(string pubkey, CancellationToken ct = default);
-        IEnumerable<NostrEvent> FetchAllByAuthorFromMemory(string pubkey);
+        IEnumerable<NostrEventWithReferences> FetchAllByAuthorFromMemory(string pubkey);
     }
 }
