@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="clr-namespace:N0str.ViewModels.Pages.Model"
+             xmlns:views="clr-namespace:N0str.Views.Pages.Model"
+             x:DataType="vm:EventReferenceViewModel"
+             x:Class="N0str.Views.Pages.Model.EventReferenceView">
+  <Border Background="#181818"
+            BorderBrush="#2E2E2E"
+            BorderThickness="1"
+            CornerRadius="8"
+            Padding="18,16"
+            Margin="0,0,0,10">
+
+        <StackPanel Spacing="8">
+
+            <!-- Nested root/reply -->
+            <ContentControl Content="{Binding EventReference}" IsVisible="{Binding HasEventReference}"/>
+
+            <!-- Content -->
+            <TextBlock
+                Text="{Binding DisplayContent}"
+                TextWrapping="Wrap"
+                FontSize="13"
+                Foreground="#C8C8C8"/>
+
+        </StackPanel>
+
+    </Border>
+
+</UserControl>
