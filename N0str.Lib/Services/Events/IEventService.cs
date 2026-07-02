@@ -1,12 +1,13 @@
-﻿using NNostr.Client;
+﻿using N0str.Models;
+using NNostr.Client;
 
 namespace N0str.Services.Events
 {
     public interface IEventService
     {
-        event Action<NostrEvent>? RelevantEventReceived;
+        event Action<NostrEventWithReferences>? RelevantEventReceived;
         event Action<string>? EoseReceived;
-        IEnumerable<NostrEvent> GetEventsByAuthor(string pubkey);
+        IEnumerable<NostrEventWithReferences> GetEventsByAuthor(string pubkey);
         void RegisterNewSubscriptionID(string subscriptionID);
     }
 }
