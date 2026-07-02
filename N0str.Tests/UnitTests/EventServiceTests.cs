@@ -80,7 +80,7 @@ namespace N0str.Tests.UnitTests
             var eventsOfPubKey = _eventService.GetEventsByAuthor(authorPubKey);
             Assert.NotEmpty(eventsOfPubKey);
             var ev = Assert.Single(eventsOfPubKey);
-            Assert.Equal(ev, nostrEvent);
+            Assert.Equal(ev.NostrEvent, nostrEvent);
         }
 
         [Fact]
@@ -113,7 +113,7 @@ namespace N0str.Tests.UnitTests
             var eventsOfPubKey = _eventService.GetEventsByAuthor(authorPubKey);
             Assert.NotEmpty(eventsOfPubKey);
             var ev = Assert.Single(eventsOfPubKey);
-            Assert.Equal(ev, nostrEvent);
+            Assert.Equal(ev.NostrEvent, nostrEvent);
 
         }
     }
