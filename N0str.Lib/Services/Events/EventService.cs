@@ -58,7 +58,12 @@ namespace N0str.Services.Events
                 List<NostrEventWithReferences> nostrEventWithReferences = new List<NostrEventWithReferences>();
                 foreach (var existingEvent in existingEventsInMemory)
                 {
-                    var references = EventReferences[existingEvent.Id];
+                    if (!EventReferences.TryGetValue(existingEvent.Id, out List<EventReference>? references))
+                    {
+                        // If no references (root), then add with empty collections.
+                        nostrEventWithReferences.Add(new(existingEvent, [], []));
+                        continue;
+                    }
                     var referencedEvents = references.Select(reference => ReceivedEvents[reference.EventId]).ToList();
                     nostrEventWithReferences.Add(new(existingEvent, references, referencedEvents));
                 }
