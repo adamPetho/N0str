@@ -53,9 +53,15 @@ namespace N0str.ViewModels.Pages.Model
                 ? new EventReferenceViewModel(rootEvent.Content, null)
                 : null;
 
-            // If there is a reply event, wrap the root chain inside it
-            if (replyEvent is not null && rootEvent.Id != replyEvent.Id)
+
+            if (replyEvent is not null && rootEvent is null)
             {
+                // If there is a reply event, but we couldn't fetch the root event for some reason.
+                currentChain = new EventReferenceViewModel(replyEvent.Content, currentChain);
+            }
+            else if (replyEvent is not null && rootEvent.Id != replyEvent.Id)
+            {
+                // If there is a reply event, wrap the root chain inside it
                 currentChain = new EventReferenceViewModel(replyEvent.Content, currentChain);
             }
 
