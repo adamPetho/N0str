@@ -1,4 +1,5 @@
-﻿using N0str.Factory;
+﻿using Microsoft.Extensions.Logging;
+using N0str.Factory;
 using N0str.Services.Events;
 using N0str.Services.Tor;
 using N0str.Services.Tor.Settings;
@@ -83,10 +84,53 @@ namespace N0str.Services.Relay
             await NostrClient.CreateSubscription(subscriptionID, [new() { Kinds = [1], Authors = [pubkey] }], ct);
         }
 
-        public async Task<List<NostrEvent>> FetchIndividualEventsAsync(string[] eventIds, CancellationToken ct = default)
+        public async Task<List<NostrEvent>> FetchIndividualEventsAsync((string EventId, string? RelayUrl)[] missingEvents, CancellationToken ct = default)
         {
-            var events = await NostrClient.FetchEvents([new() { Ids = eventIds }], ct);
-            return events;
+            var eventsWithRelays = missingEvents.Where(ev => ev.RelayUrl is not null);
+            var eventsWithoutRelays = missingEvents.Where(ev => ev.RelayUrl is null);
+
+            var task1 = FetchEventsThroughSpecificRelays([.. eventsWithRelays.Select(ev => (ev.EventId, ev.RelayUrl))], ct);
+            var task2 = NostrClient.FetchEvents([new() { Ids = [.. eventsWithoutRelays.Select(ev => ev.EventId)] }], ct);
+
+            await Task.WhenAll(task1, task2);
+
+            var combinedResults = task1.Result.Concat(task2.Result).ToList();
+            return combinedResults;
+        }
+
+        public async Task<List<NostrEvent>> FetchEventsThroughSpecificRelays((string eventId, string? relayUrl)[] events, CancellationToken ct = default)
+        {
+            var fetchTasks = events.Select(async ev =>
+            {
+                var relay = string.IsNullOrEmpty(ev.relayUrl) ? "wss://relay.primal.net" : ev.relayUrl;
+                return await FetchEvent(ev.eventId, relay, ct);
+            });
+
+            var resultsArray = await Task.WhenAll(fetchTasks);
+            var combinedResults = resultsArray.SelectMany(eventsList => eventsList).ToList();
+            return combinedResults;
+
+            async Task<List<NostrEvent>> FetchEvent(string eventId, string relayUrl, CancellationToken ct = default)
+            {
+                // Immediate fallback if relayUrl is missing or doesn't contain wss://.
+                if (string.IsNullOrWhiteSpace(relayUrl) || !relayUrl.Contains("wss://"))
+                {
+                    return await NostrClient.FetchEvents([new() { Ids = [eventId] }], ct);
+                }
+
+                try
+                {
+                    using var client = _nostrClientFactory.Create([new Uri(relayUrl)], _torSettings.GetSocksEndpoint());
+                    await client.ConnectAndWaitUntilConnected(ct);
+
+                    return await client.FetchEvents([new() { Ids = [eventId] }], ct);
+                }
+                catch (Exception ex) when (ex is not OperationCanceledException)
+                {
+                    // Fallback to default relays
+                    return await NostrClient.FetchEvents([new() { Ids = [eventId] }], ct);
+                }
+            }
         }
 
         public void Dispose()

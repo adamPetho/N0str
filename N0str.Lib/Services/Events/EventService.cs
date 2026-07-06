@@ -88,23 +88,24 @@ namespace N0str.Services.Events
                 if (references.Count != 0)
                 {
                     EventReferences.TryAdd(nostrEvent.Id, references);
-                    var idsInMemory = references
+
+                    var eventsInMemory = references
                         .Where(r => ReceivedEvents.ContainsKey(r.EventId))
-                        .Select(r => ReceivedEvents[r.EventId])
+                        .Select(r => (Event: ReceivedEvents[r.EventId], RelayUrl: r.RelayUrl))
                         .Distinct()
                         .ToList();
 
-                    referencedNostrEvents.AddRange(idsInMemory);
+                    referencedNostrEvents.AddRange(eventsInMemory.Select(ev => ev.Event));
 
-                    var missingIds = references
+                    var missingEvents = references
                          .Where(r => !ReceivedEvents.ContainsKey(r.EventId))
-                         .Select(r => r.EventId)
+                         .Select(r => (r.EventId, r.RelayUrl))
                          .Distinct()
                          .ToArray();
 
-                    if (missingIds.Length != 0)
+                    if (missingEvents.Length != 0)
                     {
-                        var events = await _relayService.FetchIndividualEventsAsync(missingIds);
+                        var events = await _relayService.FetchIndividualEventsAsync(missingEvents);
                         foreach (NostrEvent receivedEvent in events)
                         {
                             ReceivedEvents.TryAdd(receivedEvent.Id, receivedEvent);
