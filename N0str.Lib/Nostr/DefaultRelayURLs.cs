@@ -5,6 +5,10 @@
         public static readonly string[] URLs = 
             ["wss://relay.primal.net",
             "wss://nos.lol",
-            "wss://relay.damus.io"];
+            "wss://relay.damus.io",
+            "wss://relay.snort.social",
+            "wss://purplepag.es",
+            "wss://relay.wellorder.net",
+        ];
     }
 }
