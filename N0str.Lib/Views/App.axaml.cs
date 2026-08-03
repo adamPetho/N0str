@@ -80,31 +80,49 @@ namespace N0str.Views
             {
                 if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
                     vm.StatusMessage = "Could not connect to Nostr relays.";
+
+                await Task.Delay(TimeSpan.FromSeconds(2));
+                throw;
             }
             catch (SocketException)
             {
                 if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
                     vm.StatusMessage = "Network connection failed.";
+
+                await Task.Delay(TimeSpan.FromSeconds(2));
+                throw;
             }
             catch (Win32Exception)
             {
                 if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
                     vm.StatusMessage = "Tor executable could not be started.";
+
+                await Task.Delay(TimeSpan.FromSeconds(2));
+                throw;
             }
             catch (TimeoutException)
             {
                 if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
                     vm.StatusMessage = "Tor startup timed out.";
+
+                await Task.Delay(TimeSpan.FromSeconds(2));
+                throw;
             }
             catch (OperationCanceledException)
             {
                 if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
                     vm.StatusMessage = "Startup cancelled.";
+
+                await Task.Delay(TimeSpan.FromSeconds(2));
+                throw;
             }
             catch (Exception ex)
             {
                 if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
                     vm.StatusMessage = $"Unexpected error: {ex}";
+
+                await Task.Delay(TimeSpan.FromSeconds(2));
+                throw;
             }
         }
     }
