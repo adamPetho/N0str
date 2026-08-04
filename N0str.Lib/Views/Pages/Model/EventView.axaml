@@ -5,8 +5,31 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="clr-namespace:N0str.ViewModels.Pages.Model"
              xmlns:views="clr-namespace:N0str.Views.Pages.Model"
+             xmlns:model="clr-namespace:N0str.ViewModels.Pages.Model.ContentSegments"
+             xmlns:behaviors="clr-namespace:N0str.Views.Behaviors"
              x:DataType="vm:EventViewModel"
              x:Class="N0str.Views.Pages.Model.EventView">
+
+    <UserControl.Styles>
+      <Style Selector="HyperlinkButton">
+          
+    </Style>
+    </UserControl.Styles>   
+
+    <!-- Content Segments - Individual Segments -->
+    <UserControl.DataTemplates>
+       <DataTemplate DataType="model:TextSegment">
+           <TextBlock Text="{Binding Text}" FontSize="14"/>
+       </DataTemplate>
+       <DataTemplate DataType="model:MentionSegment">
+           <HyperlinkButton NavigateUri="{Binding NProfile}"
+                 Content="{Binding DisplayName}" />
+       </DataTemplate>
+       <DataTemplate DataType="model:LinkSegment">
+           <HyperlinkButton NavigateUri="{Binding Url}"
+                 Content="{Binding Url}" />
+       </DataTemplate>
+     </UserControl.DataTemplates>
 
      <UserControl.Styles>
         <!-- Event card hover -->
@@ -44,16 +67,9 @@
                 </Grid>
 
                 <!-- Content -->
-                <TextBlock Text="{Binding DisplayContent}"
-                           FontSize="14"
-                           FontWeight="Light"
-                           Foreground="#D0D0D0"
-                           TextWrapping="Wrap"
-                           HorizontalAlignment="Left"
-                           TextAlignment="Left"
-                           LineHeight="22"
-                           MinWidth="500"
-                           MaxWidth="900"/>
+                <TextBlock TextWrapping="Wrap"
+                   FontSize="14"
+                   behaviors:ContentInlines.Segments="{Binding Content}"/>
 
                   <!-- Images -->
                     <ItemsControl ItemsSource="{Binding Images}">
