@@ -2,6 +2,7 @@
 using Avalonia.Threading;
 using N0str.Models;
 using N0str.Static;
+using N0str.ViewModels.Pages.Model.ContentSegments;
 using NNostr.Client;
 using System.Collections.ObjectModel;
 
@@ -14,8 +15,7 @@ namespace N0str.ViewModels.Pages.Model
         public List<EventReference> References { get; }
         public EventReferenceViewModel? ReferenceViewModel { get; }
         public bool HasReferences => ReferenceViewModel != null;
-        public string? DisplayContent { get; }
-
+        public ObservableCollection<ContentSegment> Content { get; } = [];
         public ObservableCollection<ImageViewModel> Images { get; } = [];
 
         public bool IsMediaLoading { get; set; }
@@ -28,15 +28,10 @@ namespace N0str.ViewModels.Pages.Model
             NostrEvent = ev.NostrEvent;
             References = ev.References;
             ReferenceViewModel = BuildReferences(ev);
-            DisplayContent = NostrEvent.Content;
 
-            if (DisplayContent is null)
-                return;
-
-            var imageURLs = MediaExtractor.ExtractImageUrls(ev.NostrEvent);
-            foreach (var imageURL in imageURLs)
+            foreach (var segment in ContentParser.Parse(NostrEvent.Content))
             {
-                DisplayContent = DisplayContent.Replace(imageURL, "");
+                Content.Add(segment);
             }
         }
 
