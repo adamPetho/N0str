@@ -71,15 +71,6 @@
                    FontSize="14"
                    behaviors:ContentInlines.Segments="{Binding Content}"/>
 
-                  <!-- Images -->
-                    <ItemsControl ItemsSource="{Binding Images}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <WrapPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-
                 <StackPanel Spacing="4">
                     <TextBlock
                         Text="Replying to:"
