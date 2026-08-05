@@ -1,4 +1,5 @@
-﻿using N0str.ViewModels.Pages.Model.ContentSegments;
+﻿using N0str.ViewModels.Pages.Model;
+using N0str.ViewModels.Pages.Model.ContentSegments;
 using System.Text.RegularExpressions;
 
 namespace N0str.Static
@@ -75,7 +76,8 @@ namespace N0str.Static
             {
                 return new ImageSegment
                 {
-                    Url = value
+                    Url = value,
+                    ImageVM = new ImageViewModel(value, null)
                 };
             }
 
