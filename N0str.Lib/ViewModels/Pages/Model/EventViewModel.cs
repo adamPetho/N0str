@@ -16,11 +16,6 @@ namespace N0str.ViewModels.Pages.Model
         public EventReferenceViewModel? ReferenceViewModel { get; }
         public bool HasReferences => ReferenceViewModel != null;
         public ObservableCollection<ContentSegment> Content { get; } = [];
-        public ObservableCollection<ImageViewModel> Images { get; } = [];
-
-        public bool IsMediaLoading { get; set; }
-
-        public bool HasMedia => Images.Count > 0;
         public EventType EventType { get; }
 
         public EventViewModel(NostrEventWithReferences ev)
@@ -79,22 +74,6 @@ namespace N0str.ViewModels.Pages.Model
 
             var replyEventID = ev.References.Where(ev => ev.Type == EventType.Reply).Select(ev => ev.EventId).FirstOrDefault();
             return ev.ReferencedEvents.Where(ev => ev.Id == replyEventID).FirstOrDefault();
-        }
-
-        public async Task AddImageToEvent(string imgURL, byte[] imageBytes)
-        {
-            var bitmap = ConvertBytesToBitmap(imageBytes);
-
-            await Dispatcher.UIThread.InvokeAsync(() =>
-            {
-                Images.Add(new(imgURL, bitmap));
-            });
-        }
-
-        private Bitmap ConvertBytesToBitmap(byte[] bytes)
-        {
-            using var ms = new MemoryStream(bytes);
-            return new Bitmap(ms);
         }
     }
 }
