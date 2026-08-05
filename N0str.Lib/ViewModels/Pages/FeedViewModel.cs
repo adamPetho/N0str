@@ -7,6 +7,7 @@ using N0str.Services.Events;
 using N0str.Services.Media;
 using N0str.Static;
 using N0str.ViewModels.Pages.Model;
+using N0str.ViewModels.Pages.Model.ContentSegments;
 using NNostr.Client;
 using ReactiveUI;
 using System.Collections.ObjectModel;
@@ -110,7 +111,13 @@ namespace N0str.ViewModels.Pages
 
                 if (MediaExtractor.TryGetImageUrls(ev.NostrEvent, out IReadOnlyList<string> imageLinks))
                 {
-                    var mediaRequst = new MediaRequest(imageLinks, eventVM);
+                    var imageVMs = eventVM.Content
+                        .OfType<ImageSegment>()
+                        .Where(segment => imageLinks.Contains(segment.Url))
+                        .Select(segment => segment.ImageVM)
+                        .ToList();
+
+                    var mediaRequst = new MediaRequest(imageLinks, imageVMs);
                    _mediaPipelineService.EnqueueURL(mediaRequst);
                 }
 
@@ -128,7 +135,13 @@ namespace N0str.ViewModels.Pages
 
             if (MediaExtractor.TryGetImageUrls(ev.NostrEvent, out IReadOnlyList<string> imageLinks))
             {
-                var mediaRequst = new MediaRequest(imageLinks, eventVM);
+                var imageVMs = eventVM.Content
+                        .OfType<ImageSegment>()
+                        .Where(segment => imageLinks.Contains(segment.Url))
+                        .Select(segment => segment.ImageVM)
+                        .ToList();
+
+                var mediaRequst = new MediaRequest(imageLinks, imageVMs);
                 _mediaPipelineService.EnqueueURL(mediaRequst);
             }
 
