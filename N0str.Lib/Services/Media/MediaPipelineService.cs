@@ -29,12 +29,16 @@ namespace N0str.Services.Media
             {
                 try
                 {
+                    var viewModelsByUrl = request.ViewModels.ToDictionary(vm => vm.Url);
+
                     foreach (var imgURL in request.ImageURLs) 
                     {
                         var imageBytes = await _mediaFetcherService.FetchImageBytesFromUrl(imgURL);
 
-                        // update VM, raise Event?
-                        await request.ViewModel.AddImageToEvent(imgURL, imageBytes);
+                        if (viewModelsByUrl.TryGetValue(imgURL, out var viewModel))
+                        {
+                            await viewModel.AddImageToEvent(imageBytes);
+                        }
                     }
                 }
                 catch (Exception ex)
