@@ -19,6 +19,7 @@
     public sealed class ImageSegment : ContentSegment
     {
         public string Url { get; init; }
+        public ImageViewModel ImageVM { get; init; }
     }
 
     public sealed class LinkSegment : ContentSegment
