@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
+using N0str.ViewModels.Pages.Model;
 using N0str.ViewModels.Pages.Model.ContentSegments;
 using System.Collections.Specialized;
 
@@ -90,6 +91,13 @@ namespace N0str.Views.Behaviors
                             }));
                         break;
 
+                    case ImageSegment image:
+                        textBlock.Inlines.Add(new InlineUIContainer(
+                            new ContentControl
+                            {
+                                Content = image.ImageVM
+                            }));
+                        break;
                         // TODO: ImageSegment
                 }
             }
