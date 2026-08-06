@@ -1,6 +1,7 @@
 ﻿using N0str.Models;
 using N0str.Services.Events;
 using N0str.Services.Relay;
+using NBitcoin;
 using NBitcoin.Secp256k1;
 using NNostr.Client;
 using NNostr.Client.Protocols;
@@ -71,6 +72,13 @@ namespace N0str.Nostr
             _eventService.RegisterNewSubscriptionID(subscriptionID);
 
             await _relayService.CreateSubscriptionAsync(pubkey, subscriptionID, ct);
+        }
+
+        public async Task<NostrEvent> SignWithBurnerKeys(NostrEvent nostrEvent)
+        {
+            // Random burner key
+            var key = ECPrivKey.Create(RandomUtils.GetBytes(32));
+            return await nostrEvent.ComputeIdAndSignAsync(key);
         }
     }
 }
