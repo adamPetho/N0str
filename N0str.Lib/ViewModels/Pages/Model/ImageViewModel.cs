@@ -17,9 +17,13 @@ namespace N0str.ViewModels.Pages.Model
             get => _bitmap;
             set => SetProperty(ref _bitmap, value);
         }
-        public int? Width => Bitmap?.PixelSize.Width;
-        public int? Height => Bitmap?.PixelSize.Height;
-        public bool HasImage => Bitmap != null;
+
+        private bool _isLoading = true;
+        public bool IsLoading
+        {
+            get => _isLoading;
+            set => SetProperty(ref _isLoading, value);
+        }
 
         public ImageViewModel(string url, Bitmap? bitmap)
         {
@@ -31,8 +35,11 @@ namespace N0str.ViewModels.Pages.Model
         {
             var bitmap = ConvertBytesToBitmap(imageBytes);
 
+            await Task.Delay(TimeSpan.FromSeconds(10));
+
             await Dispatcher.UIThread.InvokeAsync(() =>
             {
+                IsLoading = false;
                 Bitmap = bitmap;
             });
         }

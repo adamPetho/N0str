@@ -11,10 +11,22 @@
             BorderThickness="1"
             ClipToBounds="True">
 
+    <Grid>
+
         <Image Source="{Binding Bitmap}"
-               RenderOptions.BitmapInterpolationMode="HighQuality"
+               IsVisible="{Binding HasImage}"
                Stretch="Uniform"
-               MaxWidth="900"/>
+               MaxWidth="900"
+               RenderOptions.BitmapInterpolationMode="HighQuality"/>
+
+        <ProgressBar IsIndeterminate="True"
+                     Width="120"
+                     Height="4"
+                     HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     IsVisible="{Binding IsLoading}"/>
+
+    </Grid>
 
     </Border>
 </UserControl>
