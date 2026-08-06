@@ -3,6 +3,7 @@ using N0str.Nostr;
 using N0str.Services.Events;
 using N0str.Services.Relay;
 using NBitcoin.Secp256k1;
+using NNostr.Client;
 using NNostr.Client.Protocols;
 
 
@@ -51,6 +52,33 @@ namespace N0str.Tests.UnitTests
             string nsec = privateKey.ToNIP19();
 
             await _n0strClient.SignEvent(nsec, actualEvent);
+            actualEvent.Verify();
+        }
+
+        [Fact]
+        public async Task Create_And_Sign_With_Burner_Keys_Async()
+        {
+            string expectedContent = "Test - Content";
+            int expectedKind = 1;
+            List<(string TagIdentifier, string[] Data)> tags = new();
+            tags.Add(("Tag-Identifier-1", new[] { "Tag-1-Data-1", "Tag-1-Data-2" }));
+            tags.Add(("Tag-Identifier-2", new[] { "Tag-2-Data-1", "Tag-2-Data-2" }));
+
+            var actualEvent = await _n0strClient.CreateNostrEvent(expectedContent, expectedKind, tags);
+
+            Assert.Equal(expectedContent, actualEvent.Content);
+            Assert.Equal(expectedKind, actualEvent.Kind);
+            Assert.Equal(2, actualEvent.Tags.Count);
+            Assert.Equal("Tag-Identifier-1", actualEvent.Tags[0].TagIdentifier);
+            Assert.Equal("Tag-Identifier-2", actualEvent.Tags[1].TagIdentifier);
+
+            Assert.Equal("Tag-1-Data-1", actualEvent.Tags[0].Data[0]);
+            Assert.Equal("Tag-1-Data-2", actualEvent.Tags[0].Data[1]);
+            Assert.Equal("Tag-2-Data-1", actualEvent.Tags[1].Data[0]);
+            Assert.Equal("Tag-2-Data-2", actualEvent.Tags[1].Data[1]);
+
+            await _n0strClient.SignWithBurnerKeys(actualEvent);
+            actualEvent.Verify();
         }
     }
 }
