@@ -31,7 +31,7 @@
                    Foreground="#555555"
                    LetterSpacing="1.2"/>
       </StackPanel>
-      <TextBlock Text="Enter the public key of the user."
+      <TextBlock Text="Enter the npub or nprofile of the user."
                  FontSize="12"
                  FontWeight="Light"
                  Foreground="#666666"
@@ -47,7 +47,7 @@
                  Foreground="#AAAAAA"/>
       <TextBox
                Text="{Binding PublicKey}"
-               Watermark="npub..."
+               Watermark="npub or nprofile..."
                Background="#171717"
                Foreground="#E0E0E0"
                BorderBrush="#2A2A2A"
