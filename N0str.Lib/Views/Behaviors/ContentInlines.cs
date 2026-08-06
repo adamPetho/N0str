@@ -77,6 +77,8 @@ namespace N0str.Views.Behaviors
                         textBlock.Inlines.Add(new InlineUIContainer(
                             new HyperlinkButton
                             {
+                                Margin = new Thickness(0),
+                                Padding = new Thickness(0),
                                 Content = mention.DisplayName,
                                 NavigateUri = TryCreateUri(mention.NProfile)
                             }));
@@ -86,8 +88,11 @@ namespace N0str.Views.Behaviors
                         textBlock.Inlines.Add(new InlineUIContainer(
                             new HyperlinkButton
                             {
+                                Margin = new Thickness(0),
+                                Padding = new Thickness(0),
                                 Content = link.Url,
                                 NavigateUri = TryCreateUri(link.Url)
+                                
                             }));
                         break;
 
