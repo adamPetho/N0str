@@ -1,7 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
-using N0str.ViewModels.Pages.Model;
 using N0str.ViewModels.Pages.Model.ContentSegments;
 using System.Collections.Specialized;
 
@@ -11,7 +10,6 @@ namespace N0str.Views.Behaviors
     /// Renders a collection of ContentSegment items as flowing inline text on a TextBlock.
     /// Plain text becomes Run/LineBreak inlines; mentions and links are embedded as
     /// InlineUIContainer(HyperlinkButton), so they wrap naturally with surrounding text
-    /// instead of being laid out as separate block-level items.
     /// </summary>
     public static class ContentInlines
     {
