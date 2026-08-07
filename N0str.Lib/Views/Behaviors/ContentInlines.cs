@@ -103,7 +103,6 @@ namespace N0str.Views.Behaviors
                                 Content = image.ImageVM
                             }));
                         break;
-                        // TODO: ImageSegment
                 }
             }
         }
