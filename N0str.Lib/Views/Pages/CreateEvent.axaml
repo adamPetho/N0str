@@ -254,9 +254,40 @@
       </Border>
 
       <!-- Submit & Back --> 
-      <Grid ColumnDefinitions="*, *">
+      <Grid ColumnDefinitions="*" RowDefinitions="*, *, *">
+          <Button Command="{Binding SignWithBurnerKeysCommand}"
+                  Grid.Column="0"
+                  Grid.Row="0"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Center"
+                  Background="#7B68EE"
+                  Foreground="#FFFFFF"
+                  BorderThickness="0"
+                  CornerRadius="12"
+                  Padding="0,15"
+                  FontSize="14"
+                  FontWeight="SemiBold"
+                  Content="Sign with burner keys"
+                  Margin="0,4,0,0"/>
+
+          <Button Command="{Binding SignWithExternalKeysCommand}"
+                  Grid.Column="0"
+                  Grid.Row="1"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Center"
+                  Background="#7B68EE"
+                  Foreground="#FFFFFF"
+                  BorderThickness="0"
+                  CornerRadius="12"
+                  Padding="0,15"
+                  FontSize="14"
+                  FontWeight="SemiBold"
+                  Content="Sign with external keys"
+                  Margin="0,4,0,0"/>
+
           <Button Command="{Binding NavigateBack}"
                   Grid.Column="0"
+                  Grid.Row="2"
                   HorizontalAlignment="Stretch"
                   HorizontalContentAlignment="Center"
                   Background="#7B68EE"
@@ -267,21 +298,7 @@
                   FontSize="14"
                   FontWeight="SemiBold"
                   Content="Cancel"
-                  Margin="0,4,4,0"/>
-
-          <Button Command="{Binding SignAndPublishCommand}"
-                  Grid.Column="1"
-                  HorizontalAlignment="Stretch"
-                  HorizontalContentAlignment="Center"
-                  Background="#7B68EE"
-                  Foreground="#FFFFFF"
-                  BorderThickness="0"
-                  CornerRadius="12"
-                  Padding="0,15"
-                  FontSize="14"
-                  FontWeight="SemiBold"
-                  Content="Sign &amp; Publish"
-                  Margin="0,4,0,0"/>
+                  Margin="0,4,4,0"/>          
       </Grid>
     </StackPanel>
   </ScrollViewer>
