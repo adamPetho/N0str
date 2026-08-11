@@ -3,6 +3,8 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
+using N0str.Helpers;
+using N0str.Logging;
 using N0str.Nostr;
 using N0str.Services;
 using N0str.Services.Relay;
@@ -52,6 +54,9 @@ namespace N0str.Views
                 desktop.MainWindow = loadingWindow;
 
                 loadingWindow.Show();
+
+                string dataDir = EnvironmentHelpers.GetDataDir(Path.Combine("N0str", "Client"));
+                Logger.Initialize(dataDir);
 
                 loadingVm.StatusMessage = "Starting Tor...";
 
