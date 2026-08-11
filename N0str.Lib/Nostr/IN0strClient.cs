@@ -10,5 +10,6 @@ namespace N0str.Nostr
         Task PublishEventAsync(NostrEvent ev, CancellationToken ct = default);
         Task SubscribeToPubkey(string pubkey, CancellationToken ct = default);
         IEnumerable<NostrEventWithReferences> FetchAllByAuthorFromMemory(string pubkey);
+        Task<NostrEvent> SignWithBurnerKeys(NostrEvent nostrEvent);
     }
 }
