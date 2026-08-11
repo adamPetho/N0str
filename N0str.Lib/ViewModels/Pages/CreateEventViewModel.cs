@@ -56,7 +56,9 @@ namespace N0str.ViewModels.Pages
         public ReactiveCommand<Unit, Unit> ToggleTagsCommand { get; }
         public ReactiveCommand<Unit, Unit> AddTagCommand { get; }
         public ReactiveCommand<TagEntryViewModel, Unit> RemoveTagCommand { get; }
-        public ReactiveCommand<Unit, Unit> SignAndPublishCommand { get; }
+        public ReactiveCommand<Unit, Unit> SignWithExternalKeysCommand { get; }
+        public ReactiveCommand<Unit, Unit> SignWithBurnerKeysCommand { get; }
+
         public ICommand NavigateBack {  get; }
 
         public CreateEventViewModel(INavigation navigationService, IServiceProvider serviceProvider, IN0strClient noStrClient)
@@ -85,9 +87,8 @@ namespace N0str.ViewModels.Pages
             var canPublish = this.WhenPropertyChanged(x => x.IsValid)
                      .Select(x => x.Value);
 
-            SignAndPublishCommand = ReactiveCommand.CreateFromTask(async () =>
+            SignWithExternalKeysCommand = ReactiveCommand.CreateFromTask(async () =>
             {
-
                 NostrEvent unsignedNostrEvent = await _n0strClient.CreateNostrEvent(
                     Content,
                     Kind,
@@ -96,6 +97,20 @@ namespace N0str.ViewModels.Pages
                 var signModal = _serviceProvider.GetRequiredService<SignEventViewModel>();
                 signModal.Initialize(unsignedNostrEvent);
                 _navigationService.OpenModal(signModal);
+
+            }, canPublish);
+
+            SignWithBurnerKeysCommand = ReactiveCommand.CreateFromTask(async () =>
+            {
+                NostrEvent unsignedNostrEvent = await _n0strClient.CreateNostrEvent(
+                    Content,
+                    Kind,
+                    Tags.Select(t => (TagIdentifier: t.Identifier, Data: new[] { t.Data })).ToList());
+
+                var signedEvent = await _n0strClient.SignWithBurnerKeys(unsignedNostrEvent);
+                await _n0strClient.PublishEventAsync(signedEvent);
+                var successVm = _serviceProvider.GetRequiredService<SuccessfulBroadcastViewModel>();
+                _navigationService.OpenModal(successVm);
 
             }, canPublish);
 
