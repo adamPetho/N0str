@@ -1,0 +1,73 @@
+﻿using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
+
+namespace N0str.Helpers
+{
+    public static class EnvironmentHelpers
+    {
+        // appName, dataDir
+        private static ConcurrentDictionary<string, string> DataDirDict { get; } = new ConcurrentDictionary<string, string>();
+
+        public static string GetDataDir(string appName)
+        {
+            if (DataDirDict.TryGetValue(appName, out string? dataDir))
+            {
+                return dataDir;
+            }
+
+            string directory;
+
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var home = Environment.GetEnvironmentVariable("HOME");
+                if (!string.IsNullOrEmpty(home))
+                {
+                    directory = Path.Combine(home, "." + appName.ToLowerInvariant());
+                }
+                else
+                {
+                    throw new DirectoryNotFoundException("Could not find suitable datadir.");
+                }
+            }
+            else
+            {
+                var localAppData = Environment.GetEnvironmentVariable("APPDATA");
+                if (!string.IsNullOrEmpty(localAppData))
+                {
+                    directory = Path.Combine(localAppData, appName);
+                }
+                else
+                {
+                    throw new DirectoryNotFoundException("Could not find suitable datadir.");
+                }
+            }
+
+            if (Directory.Exists(directory))
+            {
+                DataDirDict.TryAdd(appName, directory);
+                return directory;
+            }
+
+            Directory.CreateDirectory(directory);
+
+            DataDirDict.TryAdd(appName, directory);
+            return directory;
+        }
+
+        public static void EnsureContainingDirectoryExists(string fileNameOrPath)
+        {
+            string fullPath = Path.GetFullPath(fileNameOrPath); // No matter if relative or absolute path is given to this.
+            string? dir = Path.GetDirectoryName(fullPath);
+            EnsureDirectoryExists(dir);
+        }
+
+        public static void EnsureDirectoryExists(string? dir)
+        {
+            // If root is given, then do not worry.
+            if (!string.IsNullOrWhiteSpace(dir) && !Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+        }
+    }
+}
