@@ -6,6 +6,14 @@ namespace N0str.Logging
     {
         private static string FilePath { get; set; } = "Logs.txt";
         private static object FileLock = new object();
+
+        private static readonly bool LoggingEnabled =
+        #if DEBUG
+            false;
+        #else
+            true;
+        #endif
+
         public static void Initialize(string filePath)
         {
             SetFilePath(filePath);
@@ -19,6 +27,9 @@ namespace N0str.Logging
 
         private static void Log(string message, LogLevel logLevel)
         {
+            if (!LoggingEnabled) 
+                return;
+
             var messageBuilder = new StringBuilder();
             messageBuilder.Append($"{DateTime.UtcNow.ToLocalTime():yyyy-MM-dd HH:mm:ss.fff} [{logLevel.ToString().ToUpperInvariant()}] [{Environment.CurrentManagedThreadId}]\t");
 
