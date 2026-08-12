@@ -1,7 +1,6 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Avalonia.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using N0str.Helpers;
 using N0str.Logging;
@@ -13,7 +12,6 @@ using N0str.ViewModels;
 using N0str.ViewModels.Pages;
 using N0str.Views.Pages;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Net.Sockets;
 using System.Net.WebSockets;
 
@@ -59,11 +57,13 @@ namespace N0str.Views
                 Logger.Initialize(dataDir);
 
                 loadingVm.StatusMessage = "Starting Tor...";
+                Logger.LogInfo("Starting Tor.");
 
                 var torService = services.GetRequiredService<ITorService>();
                 await torService.InitializeAsync();
 
                 loadingVm.StatusMessage = "Connecting to relays...";
+                Logger.LogInfo("Connecting to relays.");
 
                 var relayService = services.GetRequiredService<IRelayService>();
                 await relayService.ConnectAsync(DefaultRelayURLs.URLs);
@@ -81,43 +81,48 @@ namespace N0str.Views
                 mainWindow.Show();
                 loadingWindow.Close();
             }
-            catch (WebSocketException)
+            catch (WebSocketException ex)
             {
                 if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
                     vm.StatusMessage = "Could not connect to Nostr relays.";
 
+                Logger.LogCritical($"Could not connect to Nostr relays. {ex}");
                 await Task.Delay(TimeSpan.FromSeconds(2));
                 throw;
             }
-            catch (SocketException)
+            catch (SocketException ex)
             {
                 if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
                     vm.StatusMessage = "Network connection failed.";
 
+                Logger.LogCritical($"Network error: {ex}");
                 await Task.Delay(TimeSpan.FromSeconds(2));
                 throw;
             }
-            catch (Win32Exception)
+            catch (Win32Exception ex)
             {
                 if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
                     vm.StatusMessage = "Tor executable could not be started.";
 
+                Logger.LogCritical($"Tor executable could not be started. {ex}");
                 await Task.Delay(TimeSpan.FromSeconds(2));
                 throw;
             }
-            catch (TimeoutException)
+            catch (TimeoutException ex)
             {
                 if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
                     vm.StatusMessage = "Tor startup timed out.";
 
+                Logger.LogCritical($"Tor startup timed out. {ex}");
                 await Task.Delay(TimeSpan.FromSeconds(2));
                 throw;
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException ex)
             {
                 if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
                     vm.StatusMessage = "Startup cancelled.";
 
+                Logger.LogCritical($"Startup Cancelled. {ex}");
                 await Task.Delay(TimeSpan.FromSeconds(2));
                 throw;
             }
@@ -126,6 +131,7 @@ namespace N0str.Views
                 if (desktop.MainWindow is LoadingWindow loading && loading.DataContext is LoadingViewModel vm)
                     vm.StatusMessage = $"Unexpected error: {ex}";
 
+                Logger.LogCritical($"Unexpected error: {ex}");
                 await Task.Delay(TimeSpan.FromSeconds(2));
                 throw;
             }
