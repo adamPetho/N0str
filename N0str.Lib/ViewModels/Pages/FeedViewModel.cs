@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using N0str.Logging;
 using N0str.Models;
 using N0str.Nostr;
 using N0str.Services;
@@ -8,7 +9,6 @@ using N0str.Services.Media;
 using N0str.Static;
 using N0str.ViewModels.Pages.Model;
 using N0str.ViewModels.Pages.Model.ContentSegments;
-using NNostr.Client;
 using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Reactive;
@@ -91,7 +91,7 @@ namespace N0str.ViewModels.Pages
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Logger.LogWarning(ex);
             }
         }
 

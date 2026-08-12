@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using N0str.Logging;
 using N0str.Nostr;
 using N0str.Services;
 using NNostr.Client;
@@ -73,8 +74,9 @@ namespace N0str.ViewModels.Pages
             {
                 signedEvent = await _nostrClient.SignEvent(PrivateKey, UnsignedEvent);
             }
-            catch (Exception) 
+            catch (Exception ex) 
             {
+                Logger.LogCritical($"Something went wrong. {ex}");
                 ErrorMessage = "Invalid private key.";
                 return;
             }
@@ -82,10 +84,12 @@ namespace N0str.ViewModels.Pages
             try
             {
                 await _nostrClient.PublishEventAsync(signedEvent);
+                Logger.LogInfo($"Successfully broadcast event.");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 ErrorMessage = "Couldn't broadcast the event.";
+                Logger.LogCritical($"Couldn't broadcast the event. {ex}");
                 return;
             }
 

@@ -1,8 +1,6 @@
-﻿using N0str.Services.Tor.Settings;
-using OnionSharp.Microservices;
+﻿using N0str.Logging;
+using N0str.Services.Tor.Settings;
 using OnionSharp.Tor;
-using System.Net;
-using System.Net.Sockets;
 
 namespace N0str.Services.Tor
 {
@@ -30,7 +28,7 @@ namespace N0str.Services.Tor
                 }
                 catch (Exception ex) when (i < maxAttempts)
                 {
-                    Console.WriteLine($"Failed to start Tor. Remaining tries: {maxAttempts - i}. Exception: {ex} ");
+                    Logger.LogWarning($"Failed to start Tor. Remaining tries: {maxAttempts - i}. Exception: {ex} ");
                     await Task.Delay(500, ct);
                 }
             }

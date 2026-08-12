@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using N0str.Factory;
-using N0str.Services.Events;
+using N0str.Logging;
 using N0str.Services.Tor;
 using N0str.Services.Tor.Settings;
 using NNostr.Client;
-using NNostr.Client.Protocols;
 
 namespace N0str.Services.Relay
 {
@@ -47,7 +46,7 @@ namespace N0str.Services.Relay
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Failed to connect to relays. Remaining tries: {maxAttempts - i}. Exception: {ex} ");
+                    Logger.LogCritical($"Failed to connect to relays. Remaining tries: {maxAttempts - i}. Exception: {ex} ");
                     if (i < maxAttempts)
                     {
                         await Task.Delay(500, ct);

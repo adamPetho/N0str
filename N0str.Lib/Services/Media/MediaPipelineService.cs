@@ -1,4 +1,5 @@
-﻿using N0str.Models;
+﻿using N0str.Logging;
+using N0str.Models;
 
 namespace N0str.Services.Media
 {
@@ -43,8 +44,7 @@ namespace N0str.Services.Media
                 }
                 catch (Exception ex)
                 {
-                    //TODO: Better Logging
-                    Console.WriteLine(ex);
+                    Logger.LogCritical(ex);
                 }
             }
         }
