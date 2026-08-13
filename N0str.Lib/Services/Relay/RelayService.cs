@@ -127,6 +127,7 @@ namespace N0str.Services.Relay
                 catch (Exception ex) when (ex is not OperationCanceledException)
                 {
                     // Fallback to default relays
+                    Logger.LogWarning($"Couldn't fetch '{eventId}' with specified relay '{relayUrl}'. Fallback to default relays. Exception: {ex}");
                     return await NostrClient.FetchEvents([new() { Ids = [eventId] }], ct);
                 }
             }
