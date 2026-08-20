@@ -38,7 +38,7 @@
         </Style>
      </UserControl.Styles>
 
- <Border Classes="event-card"
+            <Border Classes="event-card"
                     Background="#1C1C1C"
                     BorderBrush="#252525"
                     BorderThickness="1"
@@ -81,37 +81,38 @@
                   <ContentControl Content="{Binding ReferenceViewModel}" IsVisible="{Binding HasReferences}" />
                  </StackPanel>
 
-                <!-- Tags -->
-               <WrapPanel>
-                <ItemsControl ItemsSource="{Binding NostrEvent.Tags}"
-                              IsVisible="{Binding NostrEvent.Tags.Count, Converter={x:Static ObjectConverters.IsNotNull}}">
-                  <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                      <WrapPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                  </ItemsControl.ItemsPanel>
-                  <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                      <Border Background="#1A1A2E"
-                              BorderBrush="#2A2A4A"
-                              BorderThickness="1"
-                              CornerRadius="6"
-                              Padding="9,3"
-                              Margin="0,0,6,6">
-                        <TextBlock FontSize="11"
-                                   Foreground="#7B68EEaa">
-                          <Run Text="#" Foreground="#555555"/>
-                          <Run Text="{Binding TagIdentifier}"/>
-                          <Run Text=" · " Foreground="#333333"/>
-                          <Run Text="{Binding Data[0], FallbackValue=''}" Foreground="#7B68EE88"/>
-                            <Run Text=" · " Foreground="#333333"/>
-                          <Run Text="{Binding Data[2], FallbackValue=''}" Foreground="#7B68EE88"/>
-                        </TextBlock>
-                    </Border>
-                    </DataTemplate>
-                    </ItemsControl.ItemTemplate>
+               <!-- Tags -->
+                <StackPanel Spacing="0">
+                    <TextBlock Text="Tags" Classes="FieldLabel"/>
+
+                    <ItemsControl ItemsSource="{Binding NostrEvent.Tags}"
+                                  IsVisible="{Binding NostrEvent.Tags.Count, Converter={x:Static ObjectConverters.IsNotNull}}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#1A1A2E"
+                                        BorderBrush="#2A2A4A"
+                                        BorderThickness="1"
+                                        CornerRadius="6"
+                                        Padding="9,3"
+                                        Margin="0,0,6,6">
+                                    <TextBlock FontSize="11" Foreground="#7B68EEaa">
+                                        <Run Text="#" Foreground="#555555"/>
+                                        <Run Text="{Binding TagIdentifier}"/>
+                                        <Run Text=" · " Foreground="#333333"/>
+                                        <Run Text="{Binding Data[0], FallbackValue=''}" Foreground="#7B68EE88"/>
+                                        <Run Text=" · " Foreground="#333333"/>
+                                        <Run Text="{Binding Data[2], FallbackValue=''}" Foreground="#7B68EE88"/>
+                                    </TextBlock>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                   </WrapPanel>
-                  </StackPanel>
+                </StackPanel>
+             </StackPanel>
      </Border>
 </UserControl>
