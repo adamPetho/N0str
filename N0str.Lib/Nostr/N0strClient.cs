@@ -74,11 +74,12 @@ namespace N0str.Nostr
             await _relayService.CreateSubscriptionAsync(pubkey, subscriptionID, ct);
         }
 
-        public async Task<NostrEvent> SignWithBurnerKeys(NostrEvent nostrEvent)
+        public async Task<(NostrEvent, ECPrivKey)> SignWithBurnerKeys(NostrEvent nostrEvent)
         {
             // Random burner key
-            var key = ECPrivKey.Create(RandomUtils.GetBytes(32));
-            return await nostrEvent.ComputeIdAndSignAsync(key);
+            var privKey = ECPrivKey.Create(RandomUtils.GetBytes(32));
+            var signedEvent = await nostrEvent.ComputeIdAndSignAsync(privKey);
+            return (signedEvent, privKey);
         }
     }
 }

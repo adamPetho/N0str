@@ -1,4 +1,5 @@
 ﻿using N0str.Models;
+using NBitcoin.Secp256k1;
 using NNostr.Client;
 
 namespace N0str.Nostr
@@ -10,6 +11,6 @@ namespace N0str.Nostr
         Task PublishEventAsync(NostrEvent ev, CancellationToken ct = default);
         Task SubscribeToPubkey(string pubkey, CancellationToken ct = default);
         IEnumerable<NostrEventWithReferences> FetchAllByAuthorFromMemory(string pubkey);
-        Task<NostrEvent> SignWithBurnerKeys(NostrEvent nostrEvent);
+        Task<(NostrEvent, ECPrivKey)> SignWithBurnerKeys(NostrEvent nostrEvent);
     }
 }
