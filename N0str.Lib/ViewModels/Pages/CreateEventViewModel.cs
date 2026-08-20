@@ -107,10 +107,11 @@ namespace N0str.ViewModels.Pages
                     Kind,
                     Tags.Select(t => (TagIdentifier: t.Identifier, Data: new[] { t.Data })).ToList());
 
-                var signedEvent = await _n0strClient.SignWithBurnerKeys(unsignedNostrEvent);
-                await _n0strClient.PublishEventAsync(signedEvent);
-                var successVm = _serviceProvider.GetRequiredService<SuccessfulBroadcastViewModel>();
-                _navigationService.OpenModal(successVm);
+                var result = await _n0strClient.SignWithBurnerKeys(unsignedNostrEvent);
+                var previewVM = _serviceProvider.GetRequiredService<SignedEventPreviewViewModel>();
+                previewVM.Initialize(result.Item1);
+                previewVM.InitPrivKeys(result.Item2);
+                _navigationService.OpenModal(previewVM);
 
             }, canPublish);
 
