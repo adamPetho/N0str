@@ -7,6 +7,5 @@ namespace N0str.Factory
     {
         INostrClient Create(Uri[] relays, EndPoint? torEndpoint = null);
         WebProxy? CreateProxy(EndPoint? torEndpoint);
-        INostrClient Create(Uri[] relays, WebProxy? proxy);
     }
 }

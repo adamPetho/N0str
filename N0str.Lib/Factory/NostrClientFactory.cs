@@ -23,7 +23,7 @@ namespace N0str.Factory
             };
         }
 
-        public INostrClient Create(Uri[] relays, WebProxy? proxy)
+        private INostrClient Create(Uri[] relays, WebProxy? proxy)
         {
             return relays.Length switch
             {
