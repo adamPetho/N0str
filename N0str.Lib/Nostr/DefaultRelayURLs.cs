@@ -7,6 +7,9 @@
             "wss://nos.lol",
             "wss://relay.damus.io",
             "wss://relay.wellorder.net",
+            "wss://relay.snort.social",
+            "wss://offchain.pub",
+            "wss://nostr.oxtr.dev"
         ];
     }
 }
