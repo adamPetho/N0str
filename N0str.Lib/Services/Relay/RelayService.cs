@@ -29,12 +29,13 @@ namespace N0str.Services.Relay
         {
             const int maxAttempts = 3;
             var relayUris = relayUrls.Select(x => new Uri(x));
+            INostrClient nostrClient;
 
             for (int i = 1; i <= maxAttempts; i++) 
             {
                 try
                 {
-                    INostrClient nostrClient = _nostrClientFactory.Create([.. relayUris], _torSettings.GetSocksEndpoint());
+                    nostrClient = _nostrClientFactory.Create([.. relayUris], _torSettings.GetSocksEndpoint());
                     await nostrClient.ConnectAndWaitUntilConnected(ct);
 
                     _nostrClient = nostrClient;
@@ -46,14 +47,31 @@ namespace N0str.Services.Relay
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogCritical($"Failed to connect to relays. Remaining tries: {maxAttempts - i}. Exception: {ex} ");
+                    Logger.LogWarning($"Failed to connect to relays. Remaining tries: {maxAttempts - i}. Exception: {ex} ");
                     if (i < maxAttempts)
                     {
                         await Task.Delay(500, ct);
                     }
                     else
                     {
-                        throw new RelayConnectionException("Failed to connect to relays 3 times in a row. Aborting.");
+                        try
+                        {
+                            // Fallback to clearnet
+                            nostrClient = _nostrClientFactory.Create([.. relayUris], null);
+                            await nostrClient.ConnectAndWaitUntilConnected(ct);
+
+                            _nostrClient = nostrClient;
+
+                            NostrClient.EventsReceived += OnNostrEventsReceived;
+                            NostrClient.EoseReceived += OnEoseReceived;
+
+                            return;
+                        }
+                        catch (Exception clearnetException)
+                        {
+                            Logger.LogCritical($"Failed to connect to relays over clearnet. Exception: {clearnetException}");
+                            throw;
+                        }
                     }
                 }
             }     
