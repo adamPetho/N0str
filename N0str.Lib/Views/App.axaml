@@ -44,6 +44,9 @@
         <DataTemplate DataType="model:EventReferenceViewModel">
             <modelViews:EventReferenceView />
         </DataTemplate>
+        <DataTemplate DataType="vm:SignedEventPreviewViewModel">
+            <views:SignedEventPreviewView />
+        </DataTemplate>
 
     </Application.DataTemplates>
 
