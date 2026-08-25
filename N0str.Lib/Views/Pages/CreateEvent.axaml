@@ -51,7 +51,7 @@
                    FontWeight="SemiBold"
                    Foreground="#F2F2F2"
                    LetterSpacing="-0.4"/>
-        <TextBlock Text="Compose and publish a new Nostr event"
+        <TextBlock Text="Create and publish Nostr events"
                    FontSize="13"
                    FontWeight="Light"
                    Foreground="#666666"/>
