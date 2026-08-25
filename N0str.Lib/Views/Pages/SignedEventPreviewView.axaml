@@ -1,0 +1,197 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="clr-namespace:N0str.ViewModels.Pages"
+             xmlns:behaviors="clr-namespace:N0str.Views.Behaviors"
+             x:DataType="vm:SignedEventPreviewViewModel"
+             x:Class="N0str.Views.Pages.SignedEventPreviewView">
+
+    <UserControl.Styles>
+
+        <!-- Field labels -->
+        <Style Selector="TextBlock.FieldLabel">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#828282"/>
+            <Setter Property="LetterSpacing" Value="0.6"/>
+        </Style>
+
+        <!-- Metadata chip (kind, tags) -->
+        <Style Selector="Border.Chip">
+            <Setter Property="Background" Value="#242424"/>
+            <Setter Property="BorderBrush" Value="#2F2F2F"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="20"/>
+            <Setter Property="Padding" Value="12,7"/>
+        </Style>
+
+        <!-- Private key input -->
+        <Style Selector="TextBox#PrivKeyInput">
+            <Setter Property="Foreground" Value="#E8C88A"/>
+            <Setter Property="CaretBrush" Value="#E8C88A"/>
+            <Setter Property="FontFamily" Value="Consolas,Menlo,monospace"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="12,10"/>
+        </Style>
+        <Style Selector="TextBox#PrivKeyInput /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="#221B0F"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#4A3A1A"/>
+            <Setter Property="CornerRadius" Value="10"/>
+        </Style>
+        <Style Selector="TextBox#PrivKeyInput:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="#6B532A"/>
+        </Style>
+        <Style Selector="TextBox#PrivKeyInput:focus /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="#D9A54B"/>
+        </Style>
+
+        <!-- Buttons -->
+        <Style Selector="Button.Primary">
+            <Setter Property="Background" Value="#7B68EE"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="0,11"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.Primary:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#8C7BFF"/>
+        </Style>
+        <Style Selector="Button.Primary:pressed /template/ ContentPresenter">
+            <Setter Property="Background" Value="#695699"/>
+        </Style>
+
+        <Style Selector="Button.Ghost">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#D8D8D8"/>
+            <Setter Property="BorderBrush" Value="#333333"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="0,11"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.Ghost:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#242424"/>
+        </Style>
+
+    </UserControl.Styles>
+
+    <Border Background="#1C1C1C"
+            BorderBrush="#2A2A2A"
+            BorderThickness="1"
+            CornerRadius="16"
+            MinWidth="520"
+            MaxWidth="640"
+            MinHeight="500"
+            MaxHeight="840">
+        <DockPanel LastChildFill="True">
+
+            <!-- Sticky footer: always visible, never scrolls away -->
+            <Border DockPanel.Dock="Bottom"
+                    BorderBrush="#262626"
+                    BorderThickness="0,1,0,0"
+                    Padding="28,16,20,20">
+                <Grid ColumnDefinitions="*,*">
+                    <Button Grid.Column="0"
+                            Classes="Ghost"
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding NavigateBack}"
+                            Content="Back"
+                            Margin="0,0,6,0"/>
+                    <Button Grid.Column="1"
+                            Classes="Primary"
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding PublishCommand}"
+                            Content="Publish"
+                            Margin="6,0,0,0"/>
+                </Grid>
+            </Border>
+
+            <!-- Scrollable content -->
+            <ScrollViewer Padding="28,24,20,20">
+                <StackPanel Spacing="22">
+
+                <!-- Header: title + kind chip -->
+                <Grid ColumnDefinitions="*,Auto">
+                    <StackPanel Grid.Column="0" Spacing="3" VerticalAlignment="Center">
+                        <TextBlock Text="Preview" FontSize="22" FontWeight="Bold" Foreground="#F4F4F4"/>
+
+                    </StackPanel>
+                    <Border Grid.Column="1" Classes="Chip" VerticalAlignment="Center">
+                        <TextBlock FontFamily="Consolas,Menlo,monospace" FontSize="12">
+                            <Run Text="kind" Foreground="#828282"/>
+                            <Run Text=" · " Foreground="#454545"/>
+                            <Run Text="{Binding NostrEvent.Kind, Mode=OneWay}" Foreground="#B9AEFF" FontWeight="Bold"/>
+                        </TextBlock>
+                    </Border>
+                </Grid>
+
+                <!-- Content -->
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Content" Classes="FieldLabel"/>
+                    <Border Background="#202020"
+                            BorderBrush="#2A2A2A"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Padding="14,12">
+                        <TextBlock Text="{Binding NostrEvent.Content, Mode=OneWay}"
+                                   TextWrapping="Wrap"
+                                   Foreground="#D8D8D8"
+                                   FontSize="14"
+                                   MinHeight="24"/>
+                    </Border>
+                </StackPanel>
+
+                <!-- Tags -->
+                <StackPanel Spacing="8"
+                            IsVisible="{Binding NostrEvent.Tags.Count, Converter={x:Static ObjectConverters.IsNotNull}}">
+                    <TextBlock Text="Tags" Classes="FieldLabel"/>
+                    <ItemsControl ItemsSource="{Binding NostrEvent.Tags}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Classes="Chip" Margin="0,0,8,8">
+                                    <TextBlock FontFamily="Consolas,Menlo,monospace" FontSize="13">
+                                        <Run Text="{Binding TagIdentifier}" Foreground="#828282"/>
+                                        <Run Text=" · " Foreground="#454545"/>
+                                        <Run Text="{Binding Data[0], FallbackValue=''}" Foreground="#D8D8D8"/>
+                                    </TextBlock>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <!-- Private key, only if present -->
+                <StackPanel Spacing="8" IsVisible="{Binding ShowPrivKey}">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Grid.Column="0" Text="Private Key" Classes="FieldLabel" Foreground="#D9A54B"/>
+                        <TextBlock Grid.Column="1" Text="Keep this secret" FontSize="11" Foreground="#8A6A2E"/>
+                    </Grid>
+                    <TextBox x:Name="PrivKeyInput"
+                             Text="{Binding NostrKey, Mode=OneWay}"
+                             IsReadOnly="True"
+                             PasswordChar="*"
+                             RevealPassword="False"
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"/>
+                </StackPanel>
+
+                </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
+</UserControl>
