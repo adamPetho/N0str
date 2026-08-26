@@ -27,55 +27,50 @@ namespace N0str.Services.Relay
 
         public async Task ConnectAsync(IEnumerable<string> relayUrls, CancellationToken ct = default)
         {
-            const int maxAttempts = 3;
             var relayUris = relayUrls.Select(x => new Uri(x));
             INostrClient nostrClient;
 
-            for (int i = 1; i <= maxAttempts; i++) 
+            var successfullyConnectedRelays = new List<Uri>();
+
+            foreach (var relay in relayUris)
             {
                 try
                 {
-                    nostrClient = _nostrClientFactory.Create([.. relayUris], _torSettings.GetSocksEndpoint());
-                    await nostrClient.ConnectAndWaitUntilConnected(ct);
+                    var client = _nostrClientFactory.Create([relay], _torSettings.GetSocksEndpoint());
+                    await client.Connect(ct);
 
-                    _nostrClient = nostrClient;
+                    successfullyConnectedRelays.Add(relay);
 
-                    NostrClient.EventsReceived += OnNostrEventsReceived;
-                    NostrClient.EoseReceived += OnEoseReceived;
-
-                    return;
+                    if (successfullyConnectedRelays.Count >= 3)
+                        break;
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogWarning($"Failed to connect to relays. Remaining tries: {maxAttempts - i}. Exception: {ex} ");
-                    if (i < maxAttempts)
-                    {
-                        await Task.Delay(500, ct);
-                    }
-                    else
-                    {
-                        try
-                        {
-                            // Fallback to clearnet
-                            nostrClient = _nostrClientFactory.Create([.. relayUris], null);
-                            await nostrClient.ConnectAndWaitUntilConnected(ct);
-
-                            _nostrClient = nostrClient;
-
-                            NostrClient.EventsReceived += OnNostrEventsReceived;
-                            NostrClient.EoseReceived += OnEoseReceived;
-
-                            return;
-                        }
-                        catch (Exception clearnetException)
-                        {
-                            Logger.LogCritical($"Failed to connect to relays over clearnet. Exception: {clearnetException}");
-                            throw;
-                        }
-                    }
+                    // Log and continue with next relay.
+                    Logger.LogWarning($"Failed to connect to relay: {relay.ToString()}. Exception: {ex} ");
                 }
-            }     
-            
+            }
+
+            if (successfullyConnectedRelays.Count == 0)
+            {
+                // Fallback to clearnet
+                var _clearnetClient = new NostrClient(new Uri("wss://relay.primal.net"));
+                _ = _clearnetClient.Connect(ct);
+                await _clearnetClient.WaitUntilConnected(ct);
+
+                _nostrClient = _clearnetClient;
+            }
+            else
+            {
+                // Have to reconnect again, NNostr doesn't let us keep the connections, so we build it again.
+                nostrClient = _nostrClientFactory.Create([.. successfullyConnectedRelays], _torSettings.GetSocksEndpoint());
+                await nostrClient.ConnectAndWaitUntilConnected(ct);
+
+                _nostrClient = nostrClient;
+            }
+
+            NostrClient.EventsReceived += OnNostrEventsReceived;
+            NostrClient.EoseReceived += OnEoseReceived; 
         }
 
         private void OnNostrEventsReceived(object? sender, (string subscriptionId, NostrEvent[] events) e)
