@@ -188,6 +188,11 @@
                              RevealPassword="False"
                              AcceptsReturn="True"
                              TextWrapping="Wrap"/>
+                    <Button Classes="Ghost"
+                            Command="{Binding CopyPrivKey}"
+                            Content="Copy"
+                            Padding="10,4"
+                            FontSize="12"/>
                 </StackPanel>
 
                 </StackPanel>
