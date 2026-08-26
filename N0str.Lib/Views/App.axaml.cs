@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input.Platform;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using N0str.Helpers;
@@ -41,7 +42,6 @@ namespace N0str.Views
                 var collection = new ServiceCollection();
                 collection.AddCommonServices();
 
-                var services = collection.BuildServiceProvider();
 
                 var loadingVm = new LoadingViewModel();
                 var loadingWindow = new LoadingWindow
@@ -55,6 +55,10 @@ namespace N0str.Views
 
                 string dataDir = EnvironmentHelpers.GetDataDir(Path.Combine("N0str", "Client"));
                 Logger.Initialize(dataDir);
+
+                collection.AddSingleton<IClipboardService>(new ClipboardService(desktop.MainWindow.Clipboard!));
+
+                var services = collection.BuildServiceProvider();
 
                 loadingVm.StatusMessage = "Starting Tor...";
                 Logger.LogInfo("Starting Tor.");
