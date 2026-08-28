@@ -37,7 +37,7 @@ namespace N0str.Services.Relay
                 try
                 {
                     var client = _nostrClientFactory.Create([relay], _torSettings.GetSocksEndpoint());
-                    await client.Connect(ct);
+                    await client.ConnectAndWaitUntilConnected(ct);
 
                     successfullyConnectedRelays.Add(relay);
 
@@ -54,9 +54,8 @@ namespace N0str.Services.Relay
             if (successfullyConnectedRelays.Count == 0)
             {
                 // Fallback to clearnet
-                var _clearnetClient = new NostrClient(new Uri("wss://relay.primal.net"));
-                _ = _clearnetClient.Connect(ct);
-                await _clearnetClient.WaitUntilConnected(ct);
+                var _clearnetClient = _nostrClientFactory.Create([new Uri("wss://relay.primal.net")], null);
+                await _clearnetClient.ConnectAndWaitUntilConnected(ct);
 
                 _nostrClient = _clearnetClient;
             }
