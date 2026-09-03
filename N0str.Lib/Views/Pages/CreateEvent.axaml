@@ -42,7 +42,7 @@
 </UserControl.Styles>
 
   <ScrollViewer>
-    <StackPanel Margin="40,32" Spacing="12" MaxWidth="580" HorizontalAlignment="Center">
+    <StackPanel Margin="40,32" Spacing="12" MinWidth="400" MaxWidth="580" HorizontalAlignment="Center">
 
       <!-- Header -->
       <StackPanel Spacing="4" Margin="2,0,0,16">
