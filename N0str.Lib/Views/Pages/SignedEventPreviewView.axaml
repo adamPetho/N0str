@@ -189,8 +189,9 @@
                              AcceptsReturn="True"
                              TextWrapping="Wrap"/>
                     <Button Classes="Ghost"
+                            Classes.Copied="{Binding IsCopied}"
                             Command="{Binding CopyPrivKey}"
-                            Content="Copy"
+                            Content="{Binding CopyButtonText}"
                             Padding="10,4"
                             FontSize="12"/>
                 </StackPanel>
