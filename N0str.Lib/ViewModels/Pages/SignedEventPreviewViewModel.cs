@@ -17,6 +17,9 @@ namespace N0str.ViewModels.Pages
         private readonly IClipboardService _clipboardService;
         private string? _nostrPrivKey;
 
+        private string _copyButtonText = "Copy";
+        private bool _isCopying;
+
         public SignedEventPreviewViewModel(INavigation navigationService, IServiceProvider serviceProvider, IN0strClient noStrClient, IClipboardService clipboardService)
         {
             _navigationService = navigationService;
@@ -40,10 +43,16 @@ namespace N0str.ViewModels.Pages
 
             CopyPrivKey = ReactiveCommand.CreateFromTask(async () =>
             {
-                if (string.IsNullOrEmpty(NostrKey))
+                if (string.IsNullOrEmpty(NostrKey) || _isCopying)
                     return;
 
+                _isCopying = true;
                 await _clipboardService.SetTextAsync(NostrKey);
+
+                CopyButtonText = "Copied!";
+                await Task.Delay(1500);
+                CopyButtonText = "Copy";
+                _isCopying = false;
             });
         }
 
@@ -69,6 +78,16 @@ namespace N0str.ViewModels.Pages
         public ReactiveCommand<Unit, Unit> NavigateBack { get; }
         public ReactiveCommand<Unit, Unit> CopyPrivKey { get; }
 
+        public string CopyButtonText 
+        { 
+            get => _copyButtonText;
+            set => SetProperty(ref _copyButtonText, value); 
+        }
 
+        public bool IsCopying
+        {
+            get => _isCopying;
+            set => SetProperty(ref _isCopying, value);
+        }
     }
 }
